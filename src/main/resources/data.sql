@@ -1,0 +1,7 @@
+INSERT INTO RESTAURANTS (NAME, ADDRESS, DATE_TIME)
+VALUES ('Macdonalds', 'Москва', '2021-05-01 00:00:00'),
+       ('DoDo пицца', 'Мытищи', '2021-05-02 00:00:00');
+
+INSERT INTO DISHES (NAME, PRICE, DATE_TIME, RESTAURANT_ID)
+VALUES ('chicken', 250, '2021-05-06 00:00:00', 1),
+       ('Картошка', 100,'2020-05-07 00:00:00', 2);
