@@ -4,11 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.h2.tools.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.sql.SQLException;
 
 @Configuration
 @Slf4j
+@EnableJpaAuditing
 public class AppConfig {
 
     @Bean(initMethod = "start", destroyMethod = "stop")
