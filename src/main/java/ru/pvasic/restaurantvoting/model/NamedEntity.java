@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -19,6 +20,7 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
+@Audited
 public abstract class NamedEntity extends BaseEntity {
     @NotBlank
     @Size(min = 2, max = 100)

@@ -9,8 +9,7 @@ import ru.pvasic.restaurantvoting.model.Dish;
 import java.util.List;
 
 @Transactional(readOnly = true)
-public interface DishRepository extends JpaRepository<Dish, Integer>{
-
+public interface DishRepository extends JpaRepository<Dish, Integer>, CustomDishRepository{
     @Modifying
     @Transactional
     @Query("DELETE FROM Dish d WHERE d.id=:id AND d.restaurant.id=:restaurantId")
