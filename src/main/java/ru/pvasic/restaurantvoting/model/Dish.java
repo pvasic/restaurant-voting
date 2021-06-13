@@ -20,7 +20,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Entity(name = "Dish")
@@ -31,28 +33,28 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true, exclude = {"restaurant"})
 @EntityListeners(AuditingEntityListener.class)
 @Audited
-public class Dish extends NamedEntity {
+public class Dish extends BaseEntity {
+
+    @NotBlank
+    @Size(min = 2, max = 100)
+    @Column(name = "name", nullable = false)
+    protected String name;
 
     @Column(name = "price", nullable = false)
     @NotNull
     private int price;
 
-    @Column(name = "date_time", nullable = false, updatable = false)
-    @CreatedDate
+    @Column(name = "date_time", nullable = false)
     private LocalDateTime created;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
-    @JsonBackReference
     @NotAudited
     private Restaurant restaurant;
 
-    @Column(name = "modified_date")
-    @LastModifiedDate
-    private LocalDateTime modifiedDate;
-
     public Dish(Integer id, String name, int price, LocalDateTime created) {
-        super(id, name);
+        super(id);
+        this.name = name;
         this.price = price;
         this.created = created;
     }
