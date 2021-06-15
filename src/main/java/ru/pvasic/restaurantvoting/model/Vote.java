@@ -7,19 +7,17 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
@@ -30,7 +28,7 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true, exclude = "user")
 @EntityListeners(AuditingEntityListener.class)
 @Audited
-public class Vote extends BaseEntity {
+public class Vote extends BaseEntity implements Serializable {
 
     @OneToOne
     @JoinColumn(name = "user_id")

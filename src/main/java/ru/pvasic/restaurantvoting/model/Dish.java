@@ -25,6 +25,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity(name = "Dish")
@@ -35,7 +36,7 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true, exclude = {"restaurant"})
 @EntityListeners(AuditingEntityListener.class)
 @Audited
-public class Dish extends BaseEntity implements Persistable<Integer>, HasId {
+public class Dish extends BaseEntity implements Serializable{
 
     @NotBlank
     @Size(min = 2, max = 100)

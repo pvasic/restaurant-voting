@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pvasic.restaurantvoting.model.User;
 
@@ -17,7 +18,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("DELETE FROM User u WHERE u.id=:id")
     int delete(@Param("id") int id);
 
-    Optional<User> getByEmail(String email);
+    @RestResource(rel = "by-email", path = "by-email")
+    @Query("SELECT u FROM User u WHERE u.email = LOWER(:email)")
+    Optional<User> findByEmailIgnoreCase(String email);
 
     //    https://stackoverflow.com/a/46013654/548473
     @EntityGraph(attributePaths = {"meals"}, type = EntityGraph.EntityGraphType.LOAD)

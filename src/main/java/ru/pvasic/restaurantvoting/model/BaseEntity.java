@@ -1,5 +1,6 @@
 package ru.pvasic.restaurantvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.ToString;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.util.ProxyUtils;
 import org.springframework.util.Assert;
+import ru.pvasic.restaurantvoting.HasId;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -25,7 +27,7 @@ import javax.persistence.MappedSuperclass;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true)
-public abstract class BaseEntity implements Persistable<Integer> {
+public abstract class BaseEntity implements Persistable<Integer>, HasId {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +39,7 @@ public abstract class BaseEntity implements Persistable<Integer> {
         return id;
     }
 
+    @JsonIgnore
     @Override
     public boolean isNew() {
         return id == null;
