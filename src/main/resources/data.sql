@@ -17,8 +17,8 @@ INSERT INTO RESTAURANTS (NAME, ADDRESS, DATE_TIME, USER_ID)
 VALUES ('Macdonalds', 'Москва', '2021-05-01 00:00:00', 3),
        ('DoDo пицца', 'Мытищи', '2021-05-02 00:00:00', 4);
 
-INSERT INTO DISHES (NAME, PRICE, DATE_TIME, RESTAURANT_ID)
-VALUES ('chicken', 250, '2021-05-06 00:00:00', 1),
-       ('мясо', 300, '2021-05-07 00:00:00', 1),
-       ('Картошка', 100, '2020-05-08 00:00:00', 2),
-       ('Рис', 200, '2020-05-08 10:00:00', 2);
+INSERT INTO DISHES (NAME, PRICE, DATE_TIME, RESTAURANT_ID, USER_ID)
+VALUES ('chicken', 250, '2021-05-06 00:00:00', 1, 3),
+       ('мясо', 300, '2021-05-07 00:00:00', 1, 3),
+       ('Картошка', 100, '2020-05-08 00:00:00', 2, 4),
+       ('Рис', 200, '2020-05-08 10:00:00', 2, 4);

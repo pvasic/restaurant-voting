@@ -39,8 +39,8 @@ public class Restaurant extends BaseEntity {
     @NotEmpty
     private String address;
 
-    @Column(name = "votes_number")
-    private int votesNumber;
+    @Column(name = "vote_count")
+    private int voteCount;
 
     @Column(name = "date_time", nullable = false)
     @NotNull
@@ -54,11 +54,11 @@ public class Restaurant extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Restaurant(Integer id, String name, String address, int votesNumber, LocalDateTime created) {
+    public Restaurant(Integer id, String name, String address, int voteCount, LocalDateTime created) {
         super(id);
         this.name = name;
         this.address = address;
-        this.votesNumber = votesNumber;
+        this.voteCount = voteCount;
         this.created = created;
     }
 }

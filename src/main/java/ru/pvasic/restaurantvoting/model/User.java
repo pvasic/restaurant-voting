@@ -75,6 +75,7 @@ public class User extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Role> roles;
 
+    //TODO add unique index
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
     @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
     private Restaurant restaurant;
