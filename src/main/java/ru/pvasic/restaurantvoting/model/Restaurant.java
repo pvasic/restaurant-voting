@@ -39,8 +39,8 @@ public class Restaurant extends BaseEntity {
     @NotEmpty
     private String address;
 
-    @Column(name = "vote_count")
-    private int voteCount;
+    @Column(name = "vote_count", nullable = false)
+    private Integer voteCount;
 
     @Column(name = "date_time", nullable = false)
     @NotNull

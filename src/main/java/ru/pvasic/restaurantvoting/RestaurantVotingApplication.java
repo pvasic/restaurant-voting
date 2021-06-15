@@ -32,11 +32,11 @@ public class RestaurantVotingApplication implements ApplicationRunner {
 //		System.out.println(restaurantRepository.getWithDishes(1));
 		System.out.println(dishRepository.getAll(2));
 		Dish dishUpdated = new Dish(1, "Суп", 500, LocalDateTime.of(2030, 1,1,1,1), 3);
-		dishUpdated.setRestaurant(restaurantRepository.getById(1));
+		dishUpdated.setRestaurant(restaurantRepository.getOne(1));
 		dishRepository.save(dishUpdated);
 
 		Dish dishUpdated2 = new Dish(1, "Плов", 757587, LocalDateTime.of(2050, 5,5,5,5), 3);
-		dishUpdated2.setRestaurant(restaurantRepository.getById(1));
+		dishUpdated2.setRestaurant(restaurantRepository.getOne(1));
 		dishRepository.save(dishUpdated2);
 
 		System.out.println(dishRepository.findById(1).get());
