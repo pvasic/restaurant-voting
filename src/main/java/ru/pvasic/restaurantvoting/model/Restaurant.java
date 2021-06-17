@@ -1,5 +1,6 @@
 package ru.pvasic.restaurantvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -48,6 +50,8 @@ public class Restaurant extends BaseEntity implements Serializable {
     private LocalDateTime created;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
+    @OrderBy("name ASC")
+    @JsonManagedReference
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Dish> dishes;
 

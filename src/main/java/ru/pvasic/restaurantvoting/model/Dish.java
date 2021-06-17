@@ -29,7 +29,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity(name = "Dish")
-@Table(name = "dishes", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "date_time"}, name = "dishes_unique_name_datetime_idx")})
+@Table(name = "dishes", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "created"}, name = "dishes_unique_name_created_idx")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -47,12 +47,13 @@ public class Dish extends BaseEntity implements Serializable{
     @NotNull
     private int price;
 
-    @Column(name = "date_time", nullable = false)
+    @Column(name = "created", nullable = false)
     private LocalDateTime created;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @NotAudited
+    @JsonBackReference
     private Restaurant restaurant;
 
     @Column(name = "user_id", nullable = false)
