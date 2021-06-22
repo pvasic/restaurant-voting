@@ -1,5 +1,6 @@
 package ru.pvasic.restaurantvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -57,6 +58,7 @@ public class Restaurant extends BaseEntity implements Serializable {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
     private User user;
 
     public Restaurant(Integer id, String name, String address, int voteCount, LocalDateTime created) {

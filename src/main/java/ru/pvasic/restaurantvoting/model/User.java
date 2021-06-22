@@ -1,5 +1,6 @@
 package ru.pvasic.restaurantvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AccessLevel;
@@ -81,10 +82,12 @@ public class User extends BaseEntity implements Serializable {
     //TODO add unique index
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
     @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
+    @JsonManagedReference
     private Restaurant restaurant;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
     @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
+    @JsonManagedReference
     private Vote vote;
 
     public User(User u) {

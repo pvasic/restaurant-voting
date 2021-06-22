@@ -1,5 +1,6 @@
 package ru.pvasic.restaurantvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -30,9 +32,10 @@ import java.time.LocalDateTime;
 @Audited
 public class Vote extends BaseEntity implements Serializable {
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @NotAudited
+    @JsonBackReference
     private User user;
 
     @Column(name = "restaurant_id", nullable = false)
