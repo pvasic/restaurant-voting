@@ -46,15 +46,15 @@ public class Dish extends BaseEntity implements Serializable{
     @Column(name = "created", nullable = false)
     private LocalDateTime created;
 
+    @Column(name = "user_id", nullable = false)
+    @NotNull
+    private int userId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @NotAudited
     @JsonBackReference
     private Restaurant restaurant;
-
-    @Column(name = "user_id", nullable = false)
-    @NotNull
-    private int userId;
 
     public Dish(Integer id, String name, int price, LocalDateTime created, int userId) {
         super(id);

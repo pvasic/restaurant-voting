@@ -1,4 +1,4 @@
-package ru.pvasic.restaurantvoting.repository;
+package ru.pvasic.restaurantvoting.repository.dish;
 
 import ru.pvasic.restaurantvoting.model.Dish;
 

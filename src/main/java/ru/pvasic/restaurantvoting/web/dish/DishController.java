@@ -1,4 +1,4 @@
-package ru.pvasic.restaurantvoting.web;
+package ru.pvasic.restaurantvoting.web.dish;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.pvasic.restaurantvoting.AuthUser;
 import ru.pvasic.restaurantvoting.model.Dish;
-import ru.pvasic.restaurantvoting.repository.DishRepository;
+import ru.pvasic.restaurantvoting.repository.dish.DishRepository;
 import ru.pvasic.restaurantvoting.repository.RestaurantRepository;
 import ru.pvasic.restaurantvoting.util.ValidationUtil;
 
@@ -30,29 +30,29 @@ import static ru.pvasic.restaurantvoting.util.ValidationUtil.checkNew;
 import static ru.pvasic.restaurantvoting.util.ValidationUtil.checkSingleModification;
 
 @RestController
-@RequestMapping(value = DishRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = DishController.BASE_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
-public class DishRestController {
-    static final String REST_URL = "/api";
+public class DishController {
+    static final String BASE_URL = "/api";
 
     private final DishRepository dishRepository;
     private final RestaurantRepository restaurantRepository;
 
-    @GetMapping("/anonymous/dish/{id}")
+    @GetMapping("/user/dish/{id}")
     public ResponseEntity<Dish> get(@PathVariable int id) {
         log.info("get dish {}", id);
         return ResponseEntity.of(dishRepository.findById(id));
     }
 
-    @DeleteMapping("/manager/restaurant/dish/{id}")
+    @DeleteMapping("/manager/dish/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("delete {} for user {}", id, authUser.id());
         checkSingleModification(dishRepository.delete(id, authUser.id()), "Dish id=" + id + ", user id=" + authUser.id() + " missed");
     }
 
-    @GetMapping("/anonymous/restaurant/{restaurantId}/dish")
+    @GetMapping("/user/restaurant/{restaurantId}/dish")
     public List<Dish> getAll(@PathVariable int restaurantId) {
         log.info("getAll for restaurant {}", restaurantId);
         return dishRepository.getAll(restaurantId);
@@ -64,9 +64,10 @@ public class DishRestController {
     public void update(@AuthenticationPrincipal AuthUser authUser, @RequestBody Dish dish, @PathVariable int restaurantId, @PathVariable int id) {
         log.info("update {} for restaurant {}", dish, authUser.id());
         assureIdConsistent(dish, id);
-        ValidationUtil.checkNotFoundWithId(dishRepository.getWithCheck(id, restaurantId, authUser.id()),
+        ValidationUtil.checkNotFoundWithId(dishRepository.get(id, restaurantId, authUser.id()),
                 "Meal id=" + id + ", restaurant id=" + restaurantId + " doesn't belong to user id=" + authUser.id());
         dish.setRestaurant(restaurantRepository.getById(restaurantId));
+        dish.setUserId(authUser.id());
         dishRepository.save(dish);
     }
 
@@ -79,12 +80,12 @@ public class DishRestController {
                 "Restaurant id=" + restaurantId + " doesn't belong to user id=" + authUser.id()));
         Dish created = dishRepository.save(dish);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/anonymous/dish/{id}")
+                .path(BASE_URL + "/user/dish/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @GetMapping("/manager/restaurant/{restaurantId}/dish/history")
+    @GetMapping("/manager/history/restaurant/{restaurantId}")
     public List<Dish> getHistoryAll(@AuthenticationPrincipal AuthUser authUser, @PathVariable int restaurantId) {
         log.info("getHistoryAll for user {}", authUser.id());
         ValidationUtil.checkNotFoundWithId(restaurantRepository.getWithCheck(restaurantId, authUser.id()),

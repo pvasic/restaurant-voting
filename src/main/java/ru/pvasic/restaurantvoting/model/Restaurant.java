@@ -51,7 +51,7 @@ public class Restaurant extends BaseEntity implements Serializable {
     private LocalDateTime created;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
-    @OrderBy("name ASC")
+    @OrderBy("created ASC")
     @JsonManagedReference
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Dish> dishes;
