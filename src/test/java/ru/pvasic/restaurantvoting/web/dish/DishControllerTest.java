@@ -6,6 +6,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.pvasic.restaurantvoting.model.Dish;
 import ru.pvasic.restaurantvoting.repository.dish.DishRepository;
 import ru.pvasic.restaurantvoting.util.JsonUtil;
@@ -65,9 +67,7 @@ class DishControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = MANAGER_EMAIL)
     void update() throws Exception {
         Dish updated = DishTestData.getUpdated();
-        perform(MockMvcRequestBuilders.put(BASE_URL + "manager/restaurant/" + RESTAURANT1_ID + "/dish/" + DISH1_ID)
-                .contentType(MediaType.APPLICATION_JSON).content(JsonUtil.writeValue(updated)))
-                .andExpect(status().isNoContent());
+        performPut(updated);
         DISH_MATCHER.assertMatch(dishRepository.get(DISH1_ID, RESTAURANT1_ID, MANAGER_ID).get(), updated);
     }
 
@@ -75,9 +75,7 @@ class DishControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = MANAGER_EMAIL)
     void createWithLocation() throws Exception {
         Dish newDish = DishTestData.getNew();
-        ResultActions action = perform(MockMvcRequestBuilders.post(BASE_URL + "manager/restaurant/" + RESTAURANT1_ID + "/dish/")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(newDish)));
+        ResultActions action = getPerformPost(newDish);
 
         Dish created = readFromJson(action, Dish.class);
         int newId = created.id();
@@ -86,13 +84,36 @@ class DishControllerTest extends AbstractControllerTest {
         DISH_MATCHER.assertMatch(dishRepository.get(newId, RESTAURANT1_ID, MANAGER_ID).get(), newDish);
     }
 
-//    @Test
-//    @WithUserDetails(value = MANAGER_EMAIL)
-//    void getHistoryAll() throws Exception {
-//        perform(MockMvcRequestBuilders.get(BASE_URL + "manager/history/restaurant/" + RESTAURANT1_ID))
-//                .andExpect(status().isOk())
-//                .andDo(print())
-//                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-//                .andExpect(DISH_MATCHER.contentJson(DISHES));
-//    }
+    @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @WithUserDetails(value = MANAGER_EMAIL)
+    void getHistoryAll() throws Exception {
+        Dish newDish = DishTestData.getNew();
+        ResultActions action = getPerformPost(newDish);
+
+        Dish created = readFromJson(action, Dish.class);
+        int newId = created.id();
+        newDish.setId(newId);
+
+        Dish updated = DishTestData.getUpdated();
+        performPut(updated);
+        DISH_MATCHER.assertMatch(created, newDish);
+        perform(MockMvcRequestBuilders.get(BASE_URL + "manager/history/restaurant/" + RESTAURANT1_ID))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(DISH_MATCHER.contentJson(newDish, updated));
+    }
+
+    private ResultActions getPerformPost(Dish newDish) throws Exception {
+        return perform(MockMvcRequestBuilders.post(BASE_URL + "manager/restaurant/" + RESTAURANT1_ID + "/dish/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(newDish)));
+    }
+
+    private void performPut(Dish updated) throws Exception {
+        perform(MockMvcRequestBuilders.put(BASE_URL + "manager/restaurant/" + RESTAURANT1_ID + "/dish/" + DISH1_ID)
+                .contentType(MediaType.APPLICATION_JSON).content(JsonUtil.writeValue(updated)))
+                .andExpect(status().isNoContent());
+    }
 }

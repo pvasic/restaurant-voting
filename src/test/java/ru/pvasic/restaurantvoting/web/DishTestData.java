@@ -35,7 +35,6 @@ public class DishTestData {
         return new Dish(DISH1_ID, "Обновлённое блюдо", 555, DISH_1.getCreated().plus(2, ChronoUnit.MINUTES), 2);
     }
 
-
     public static Dish getNew() {
         return new Dish(null, "Новое бдюдо", 333, LocalDateTime.of(2021, Month.MAY, 7, 9, 15, 0), 2);
     }
