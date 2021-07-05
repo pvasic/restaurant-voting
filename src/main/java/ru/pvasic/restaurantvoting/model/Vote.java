@@ -23,7 +23,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "created"}, name = "dishes_unique_user_id_created_idx")})
+@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "dishes_unique_user_id_date_time_idx")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -42,7 +42,7 @@ public class Vote extends BaseEntity implements Serializable {
     @NotNull
     private int restaurantId;
 
-    @Column(name = "created", nullable = false)
+    @Column(name = "date_time", nullable = false)
     @NotNull
-    private LocalDateTime created;
+    private LocalDateTime dateTime;
 }

@@ -1,4 +1,4 @@
-package ru.pvasic.restaurantvoting.util;
+package ru.pvasic.restaurantvoting.util.validation;
 
 import lombok.experimental.UtilityClass;
 import ru.pvasic.restaurantvoting.HasId;

@@ -2,7 +2,7 @@ package ru.pvasic.restaurantvoting.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
-import ru.pvasic.restaurantvoting.util.ValidationUtil;
+import ru.pvasic.restaurantvoting.util.validation.ValidationUtil;
 
 // https://stackoverflow.com/questions/42781264/multiple-base-repositories-in-spring-data-jpa
 @NoRepositoryBean

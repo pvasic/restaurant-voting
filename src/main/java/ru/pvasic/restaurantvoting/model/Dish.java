@@ -25,7 +25,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity(name = "Dish")
-@Table(name = "dishes", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "created"}, name = "dishes_unique_name_created_idx")})
+@Table(name = "dishes", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "date_time"}, name = "dishes_unique_name_date_time_idx")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -43,8 +43,8 @@ public class Dish extends BaseEntity implements Serializable{
     @NotNull
     private int price;
 
-    @Column(name = "created", nullable = false)
-    private LocalDateTime created;
+    @Column(name = "date_time", nullable = false)
+    private LocalDateTime dateTime;
 
     @Column(name = "user_id", nullable = false)
     @NotNull
@@ -56,11 +56,11 @@ public class Dish extends BaseEntity implements Serializable{
     @JsonBackReference
     private Restaurant restaurant;
 
-    public Dish(Integer id, String name, int price, LocalDateTime created, int userId) {
+    public Dish(Integer id, String name, int price, LocalDateTime dateTime, int userId) {
         super(id);
         this.name = name;
         this.price = price;
-        this.created = created;
+        this.dateTime = dateTime;
         this.userId = userId;
     }
 }

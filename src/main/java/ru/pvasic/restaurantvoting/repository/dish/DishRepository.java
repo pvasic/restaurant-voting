@@ -19,7 +19,7 @@ public interface DishRepository extends JpaRepository<Dish, Integer>, CustomDish
     @Query("SELECT d FROM Dish d WHERE d.id = :id AND d.restaurant.id=:restaurantId AND d.userId = :userId")
     Optional<Dish> get(int id, int restaurantId, int userId);
 
-    @Query("SELECT d FROM Dish d WHERE d.restaurant.id=:restaurantId ORDER BY d.created ASC")
+    @Query("SELECT d FROM Dish d WHERE d.restaurant.id=:restaurantId ORDER BY d.dateTime ASC")
     List<Dish> getAll(int restaurantId);
 
     @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.id = ?1 and d.restaurant.id = ?2")

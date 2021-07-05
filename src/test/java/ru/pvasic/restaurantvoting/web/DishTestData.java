@@ -32,7 +32,7 @@ public class DishTestData {
     public static final List<Dish> DISHES = List.of(DISH_2, DISH_1);
 
     public static Dish getUpdated() {
-        return new Dish(DISH1_ID, "Обновлённое блюдо", 555, DISH_1.getCreated().plus(2, ChronoUnit.MINUTES), 2);
+        return new Dish(DISH1_ID, "Обновлённое блюдо", 555, DISH_1.getDateTime().plus(2, ChronoUnit.MINUTES), 2);
     }
 
     public static Dish getNew() {

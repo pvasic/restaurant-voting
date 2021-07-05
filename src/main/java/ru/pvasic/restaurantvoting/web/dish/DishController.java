@@ -20,14 +20,14 @@ import ru.pvasic.restaurantvoting.AuthUser;
 import ru.pvasic.restaurantvoting.model.Dish;
 import ru.pvasic.restaurantvoting.repository.dish.DishRepository;
 import ru.pvasic.restaurantvoting.repository.RestaurantRepository;
-import ru.pvasic.restaurantvoting.util.ValidationUtil;
+import ru.pvasic.restaurantvoting.util.validation.ValidationUtil;
 
 import java.net.URI;
 import java.util.List;
 
-import static ru.pvasic.restaurantvoting.util.ValidationUtil.assureIdConsistent;
-import static ru.pvasic.restaurantvoting.util.ValidationUtil.checkNew;
-import static ru.pvasic.restaurantvoting.util.ValidationUtil.checkSingleModification;
+import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.assureIdConsistent;
+import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew;
+import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkSingleModification;
 
 @RestController
 @RequestMapping(value = DishController.BASE_URL, produces = MediaType.APPLICATION_JSON_VALUE)
