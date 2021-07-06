@@ -30,11 +30,11 @@ import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkSingleModification;
 
 @RestController
-@RequestMapping(value = DishController.BASE_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = DishRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
-public class DishController {
-    static final String BASE_URL = "/api";
+public class DishRestController {
+    static final String REST_URL = "/api/rest";
 
     private final DishRepository dishRepository;
     private final RestaurantRepository restaurantRepository;
@@ -80,7 +80,7 @@ public class DishController {
                 "Restaurant id=" + restaurantId + " doesn't belong to user id=" + authUser.id()));
         Dish created = dishRepository.save(dish);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(BASE_URL + "/user/dish/{id}")
+                .path(REST_URL + "/user/dish/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }

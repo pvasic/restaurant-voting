@@ -39,7 +39,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true, exclude = {"password"})
+@ToString(callSuper = true, exclude = {"password", "restaurant", "vote"})
 public class User extends BaseEntity implements Serializable {
 
     @Column(name = "email", nullable = false, unique = true)

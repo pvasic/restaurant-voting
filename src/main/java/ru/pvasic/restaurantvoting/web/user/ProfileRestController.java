@@ -29,10 +29,10 @@ import java.net.URI;
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew;
 
 @RestController
-@RequestMapping(value = ProfileRestController.BASE_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = ProfileRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 public class ProfileRestController extends AbstractUserController {
-    static final String BASE_URL = "/profile";
+    static final String REST_URL = "/api/rest/profile";
 
     @GetMapping
     public HttpEntity<User> get(@AuthenticationPrincipal AuthUser authUser) {
@@ -47,20 +47,18 @@ public class ProfileRestController extends AbstractUserController {
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    @CacheEvict(allEntries = true)
     public ResponseEntity<User> register(@Valid @RequestBody UserTo userTo) {
         log.info("register {}", userTo);
         checkNew(userTo);
         User created = prepareAndSave(UserUtil.createNewFromTo(userTo));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(BASE_URL).build().toUri();
+                .path(REST_URL).build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    @CacheEvict(allEntries = true)
     public void update(@RequestBody UserTo userTo, @AuthenticationPrincipal AuthUser authUser) throws BindException {
         validateBeforeUpdate(userTo, authUser.id());
         User user = repository.getExisted(userTo.id());

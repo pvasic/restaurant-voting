@@ -1,14 +1,14 @@
 INSERT INTO USERS (EMAIL, FIRST_NAME, LAST_NAME, PASSWORD)
 VALUES ('user@gmail.com', 'User_First', 'User_Last', '{noop}userPassword'),
        ('manager@gmail.com', 'Manager_First', 'Manager_Last', '{noop}managerPassword'),
-       ('admin@javaops.ru', 'Admin_First', 'Admin_Last', '{noop}adminPassword');
+       ('admin@gmail.ru', 'Admin_First', 'Admin_Last', '{noop}adminPassword');
 
 INSERT INTO USER_ROLES (ROLE, USER_ID)
 VALUES ('USER', 1),
        ('USER', 2),
        ('MANAGER', 2),
        ('ADMIN', 3),
-       ('MANAGER', 3);
+       ('USER', 3);
 
 INSERT INTO RESTAURANTS (NAME, ADDRESS, VOTE_COUNT, DATE_TIME, USER_ID)
 VALUES ('Macdonalds', 'Москва', 0, '2021-05-01 00:00:00', 2),

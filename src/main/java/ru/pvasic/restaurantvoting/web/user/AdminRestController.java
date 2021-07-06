@@ -28,11 +28,11 @@ import java.util.List;
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew;
 
 @RestController
-@RequestMapping(value = AdminController.BASE_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = AdminRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
-public class AdminController extends AbstractUserController {
+public class AdminRestController extends AbstractUserController {
 
-    static final String BASE_URL = "/admin/users";
+    static final String REST_URL = "/api/rest/admin/users";
 
     @Override
     @GetMapping("/{id}")
@@ -59,7 +59,7 @@ public class AdminController extends AbstractUserController {
         checkNew(user);
         User created = prepareAndSave(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(BASE_URL + "/{id}")
+                .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
