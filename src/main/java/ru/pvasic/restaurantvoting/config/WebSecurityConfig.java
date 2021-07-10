@@ -50,8 +50,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/api/rest/admin/**").hasRole(Role.ADMIN.name())
                 .antMatchers("/api/rest/manager/**").hasRole(Role.MANAGER.name())
-                .antMatchers("/api/rest/user/**").authenticated()
                 .antMatchers("/api/rest/profile/register").anonymous()
+                .antMatchers("/api/rest/**").authenticated()
                 .and().httpBasic()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable();

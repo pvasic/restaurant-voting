@@ -36,6 +36,6 @@ public class DishTestData {
     }
 
     public static Dish getNew() {
-        return new Dish(null, "Новое бдюдо", 333, LocalDateTime.of(2021, Month.MAY, 7, 9, 15, 0), 2);
+        return new Dish(null, "Новое блюдо", 333, LocalDateTime.of(2021, Month.MAY, 15, 9, 15, 0), 2);
     }
 }

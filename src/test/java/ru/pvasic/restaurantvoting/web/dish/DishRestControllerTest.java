@@ -103,6 +103,7 @@ class DishRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(DISH_MATCHER.contentJson(newDish, updated));
+        dishRepository.deleteAll();
     }
 
     private ResultActions getPerformPost(Dish newDish) throws Exception {
