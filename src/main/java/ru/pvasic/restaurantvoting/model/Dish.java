@@ -32,7 +32,7 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true, exclude = {"restaurant"})
 @EntityListeners(AuditingEntityListener.class)
 @Audited
-public class Dish extends BaseEntity implements Serializable{
+public class Dish extends AbstractBaseEntity{
 
     @NotBlank
     @Size(min = 2, max = 100)

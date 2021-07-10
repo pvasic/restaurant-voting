@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true, exclude = "user")
 @EntityListeners(AuditingEntityListener.class)
 @Audited
-public class Vote extends BaseEntity implements Serializable {
+public class Vote extends AbstractBaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

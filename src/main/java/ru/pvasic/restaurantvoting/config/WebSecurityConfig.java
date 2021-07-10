@@ -12,8 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.pvasic.restaurantvoting.AuthUser;
 import ru.pvasic.restaurantvoting.model.Role;
 import ru.pvasic.restaurantvoting.model.User;
@@ -21,13 +19,14 @@ import ru.pvasic.restaurantvoting.repository.UserRepository;
 
 import java.util.Optional;
 
+import static ru.pvasic.restaurantvoting.util.UserUtil.PASSWORD_ENCODER;
+
 @Configuration
 @EnableWebSecurity
 @Slf4j
 @AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final UserRepository userRepository;
 
     @Bean

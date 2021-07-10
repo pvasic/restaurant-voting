@@ -66,7 +66,7 @@ public class DishRestController {
         assureIdConsistent(dish, id);
         ValidationUtil.checkNotFoundWithId(dishRepository.get(id, restaurantId, authUser.id()),
                 "Meal id=" + id + ", restaurant id=" + restaurantId + " doesn't belong to user id=" + authUser.id());
-        dish.setRestaurant(restaurantRepository.getById(restaurantId));
+        dish.setRestaurant(restaurantRepository.getOne(restaurantId));
         dish.setUserId(authUser.id());
         dishRepository.save(dish);
     }

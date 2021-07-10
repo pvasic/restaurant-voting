@@ -32,7 +32,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true, exclude = {"dishes"})
-public class Restaurant extends BaseEntity implements Serializable {
+public class Restaurant extends AbstractBaseEntity {
 
     @NotBlank
     @Size(min = 2, max = 100)
