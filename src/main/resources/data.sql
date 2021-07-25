@@ -12,7 +12,7 @@ VALUES ('USER', 1),
 
 INSERT INTO RESTAURANTS (NAME, ADDRESS, EMAIL, VOTE_COUNT, DATE_TIME, USER_ID)
 VALUES ('Macdonalds', 'Москва', 'macdonalds@mac.com', 0, '2021-05-01 00:00:00', 2),
-       ('DoDo пицца', 'Мытищи', 'dodo@do.com', 0, '2021-05-02 00:00:00', 3);
+       ('DoDoPizza', 'Мытищи', 'dodo@do.com', 0, '2021-05-02 03:00:00', 3);
 
 INSERT INTO DISHES (NAME, PRICE, DATE_TIME, RESTAURANT_ID, USER_ID)
 VALUES ('chicken', 250, '2021-05-07 09:10:00', 1, 2),

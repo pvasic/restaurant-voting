@@ -1,4 +1,4 @@
-package ru.pvasic.restaurantvoting.web;
+package ru.pvasic.restaurantvoting;
 
 import ru.pvasic.restaurantvoting.model.Dish;
 
@@ -9,15 +9,6 @@ import java.util.List;
 
 public class DishTestData {
     public static final ru.pvasic.restaurantvoting.TestMatcher<Dish> DISH_MATCHER = ru.pvasic.restaurantvoting.TestMatcher.usingIgnoringFieldsComparator(Dish.class, "restaurant");
-
-    public static final String USER_EMAIL = "user@gmail.com";
-    public static final String MANAGER_EMAIL = "manager@gmail.com";
-    public static final String ADMIN_EMAIL = "admin@javaops.ru";
-
-    public static final int USER_ID = 1;
-    public static final int MANAGER_ID = 2;
-    public static final int ADMIN_ID = 3;
-
 
     public static final int DISH1_ID = 1;
     public static final int DISH2_ID = 2;

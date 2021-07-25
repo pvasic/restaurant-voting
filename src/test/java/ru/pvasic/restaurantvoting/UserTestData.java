@@ -1,4 +1,4 @@
-package ru.pvasic.restaurantvoting.web;
+package ru.pvasic.restaurantvoting;
 
 import ru.pvasic.restaurantvoting.model.Role;
 import ru.pvasic.restaurantvoting.model.User;
