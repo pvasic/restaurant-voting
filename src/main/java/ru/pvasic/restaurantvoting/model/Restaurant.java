@@ -1,6 +1,5 @@
 package ru.pvasic.restaurantvoting.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,20 +8,19 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import ru.pvasic.restaurantvoting.HasIdAndEmail;
+import ru.pvasic.restaurantvoting.util.validation.NoHtml;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,8 +29,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true, exclude = {"dishes"})
-public class Restaurant extends AbstractBaseEntity {
+@ToString(callSuper = true, exclude = {"dishes", "userId"})
+public class Restaurant extends AbstractBaseEntity implements HasIdAndEmail {
 
     @NotBlank
     @Size(min = 2, max = 100)
@@ -43,29 +41,42 @@ public class Restaurant extends AbstractBaseEntity {
     @NotEmpty
     private String address;
 
-    @Column(name = "vote_count", nullable = false)
-    private Integer voteCount;
+    @Column(name = "email", nullable = false, unique = true)
+    @Email
+    @NotBlank
+    @Size(max = 100)
+    @NoHtml   // https://stackoverflow.com/questions/17480809
+    private String email;
+
+    @Column(name = "vote_count", nullable = false, columnDefinition = "default value = 0")
+    @NotNull
+    private int voteCount;
 
     @Column(name = "date_time", nullable = false)
     @NotNull
-    private LocalDateTime created;
+    private LocalDateTime dateTime;
+
+    @Column(name = "user_id", nullable = false)
+    @NotNull
+    private int userId;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
-    @OrderBy("created ASC")
     @JsonManagedReference
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Dish> dishes;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference
-    private User user;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
+    @JsonManagedReference
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private List<Vote> vote;
 
-    public Restaurant(Integer id, String name, String address, int voteCount, LocalDateTime created) {
+    public Restaurant(Integer id, String name, String address, String email, int voteCount, LocalDateTime dateTime, int userId) {
         super(id);
         this.name = name;
         this.address = address;
+        this.email = email;
         this.voteCount = voteCount;
-        this.created = created;
+        this.dateTime = dateTime;
+        this.userId = userId;
     }
 }

@@ -15,11 +15,11 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
@@ -27,20 +27,22 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true, exclude = "user")
+@ToString(callSuper = true, exclude = {"user", "restaurant"})
 @EntityListeners(AuditingEntityListener.class)
 @Audited
 public class Vote extends AbstractBaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @NotAudited
+    @NotNull
     @JsonBackReference
     private User user;
 
+    @ManyToOne(fetch = FetchType.EAGER)
     @Column(name = "restaurant_id", nullable = false)
     @NotNull
-    private int restaurantId;
+    @JsonBackReference
+    private Restaurant restaurant;
 
     @Column(name = "date_time", nullable = false)
     @NotNull

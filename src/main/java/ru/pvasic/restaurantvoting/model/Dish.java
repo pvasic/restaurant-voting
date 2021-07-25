@@ -51,7 +51,6 @@ public class Dish extends AbstractBaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
-    @NotAudited
     @JsonBackReference
     private Restaurant restaurant;
 

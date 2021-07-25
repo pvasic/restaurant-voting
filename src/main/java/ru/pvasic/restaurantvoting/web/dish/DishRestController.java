@@ -19,7 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.pvasic.restaurantvoting.AuthUser;
 import ru.pvasic.restaurantvoting.model.Dish;
 import ru.pvasic.restaurantvoting.repository.dish.DishRepository;
-import ru.pvasic.restaurantvoting.repository.RestaurantRepository;
+import ru.pvasic.restaurantvoting.repository.restaurant.RestaurantRepository;
 import ru.pvasic.restaurantvoting.util.validation.ValidationUtil;
 
 import java.net.URI;
@@ -64,8 +64,8 @@ public class DishRestController {
     public void update(@AuthenticationPrincipal AuthUser authUser, @RequestBody Dish dish, @PathVariable int restaurantId, @PathVariable int id) {
         log.info("update {} for restaurant {}", dish, authUser.id());
         assureIdConsistent(dish, id);
-        ValidationUtil.checkNotFoundWithId(dishRepository.get(id, restaurantId, authUser.id()),
-                "Meal id=" + id + ", restaurant id=" + restaurantId + " doesn't belong to user id=" + authUser.id());
+        ValidationUtil.checkNotFoundWithId(dishRepository.get(id, authUser.id()),
+                "Dish id=" + id + ", restaurant id=" + restaurantId + " doesn't belong to user id=" + authUser.id());
         dish.setRestaurant(restaurantRepository.getOne(restaurantId));
         dish.setUserId(authUser.id());
         dishRepository.save(dish);
@@ -76,7 +76,7 @@ public class DishRestController {
         log.info("create {} for user {}", dish, authUser.id());
         checkNew(dish);
         dish.setUserId(authUser.id());
-        dish.setRestaurant(ValidationUtil.checkNotFoundWithId(restaurantRepository.getWithCheck(restaurantId, authUser.id()),
+        dish.setRestaurant(ValidationUtil.checkNotFoundWithId(restaurantRepository.get(restaurantId, authUser.id()),
                 "Restaurant id=" + restaurantId + " doesn't belong to user id=" + authUser.id()));
         Dish created = dishRepository.save(dish);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -88,18 +88,8 @@ public class DishRestController {
     @GetMapping("/manager/history/restaurant/{restaurantId}")
     public List<Dish> getHistoryAll(@AuthenticationPrincipal AuthUser authUser, @PathVariable int restaurantId) {
         log.info("getHistoryAll for user {}", authUser.id());
-        ValidationUtil.checkNotFoundWithId(restaurantRepository.getWithCheck(restaurantId, authUser.id()),
+        ValidationUtil.checkNotFoundWithId(restaurantRepository.get(restaurantId, authUser.id()),
                 "Restaurant id=" + restaurantId + " doesn't belong to user id=" + authUser.id());
         return dishRepository.getHistoryAll(restaurantId);
     }
-
-//    @GetMapping("/filter")
-//    public List<Dish> getBetween(@RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-//                                 @RequestParam @Nullable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-//
-//        int userId = authUser.id();
-//        log.info("getBetween dates({} - {}) time({} - {}) for user {}", startDate, endDate, startTime, endTime, userId);
-//        List<Dish> dishsDateFiltered = dishRepository.getBetweenHalfOpen(atStartOfDayOrMin(startDate), atStartOfNextDayOrMax(endDate), userId);
-//        return DishsUtil.getFilteredTos(dishsDateFiltered, authUser.getUser().getCaloriesPerDay(), startTime, endTime);
-//    }
 }
