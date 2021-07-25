@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
@@ -51,7 +52,8 @@ public class Dish extends AbstractBaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value = "restaurant-dish")
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private Restaurant restaurant;
 
     public Dish(Integer id, String name, int price, LocalDateTime dateTime, int userId) {

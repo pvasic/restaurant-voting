@@ -50,7 +50,7 @@ class DishRestControllerTest extends AbstractControllerTest {
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + "manager/dish/" + DISH1_ID))
                 .andExpect(status().isNoContent());
-        assertFalse(dishRepository.get(DISH1_ID, RESTAURANT1_ID, MANAGER_ID).isPresent());
+        assertFalse(dishRepository.get(DISH1_ID, MANAGER_ID).isPresent());
     }
 
     @Test
@@ -68,7 +68,7 @@ class DishRestControllerTest extends AbstractControllerTest {
     void update() throws Exception {
         Dish updated = DishTestData.getUpdated();
         performPut(updated);
-        DISH_MATCHER.assertMatch(dishRepository.get(DISH1_ID, RESTAURANT1_ID, MANAGER_ID).get(), updated);
+        DISH_MATCHER.assertMatch(dishRepository.get(DISH1_ID, MANAGER_ID).get(), updated);
     }
 
     @Test
@@ -81,7 +81,7 @@ class DishRestControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newDish.setId(newId);
         DISH_MATCHER.assertMatch(created, newDish);
-        DISH_MATCHER.assertMatch(dishRepository.get(newId, RESTAURANT1_ID, MANAGER_ID).get(), newDish);
+        DISH_MATCHER.assertMatch(dishRepository.get(newId, MANAGER_ID).get(), newDish);
     }
 
     @Test

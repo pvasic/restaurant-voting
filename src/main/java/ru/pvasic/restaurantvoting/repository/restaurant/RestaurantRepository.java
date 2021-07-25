@@ -13,10 +13,10 @@ import java.util.Optional;
 public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
     @Transactional
     @Modifying
-    @Query("DELETE FROM Restaurant r WHERE r.id=:id AND r.userId=:userId")
+    @Query("DELETE FROM Restaurant r WHERE r.id=:id AND r.user.id=:userId")
     int delete(int id, int userId);
 
-    @Query("SELECT r FROM Restaurant r WHERE r.id=:id AND r.userId=:userId")
+    @Query("SELECT r FROM Restaurant r WHERE r.id=:id AND r.user.id=:userId")
     Optional<Restaurant> get(int id, int userId);
 
     @EntityGraph(attributePaths = {"dishes"}, type = EntityGraph.EntityGraphType.LOAD)

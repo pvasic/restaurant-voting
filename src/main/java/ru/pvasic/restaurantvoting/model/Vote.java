@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "dishes_unique_user_id_date_time_idx")})
+@Table(name = "votes", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "vote_unique_user_id_date_time_idx")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -35,13 +35,15 @@ public class Vote extends AbstractBaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @NotNull
-    @JsonBackReference
+    @JsonBackReference(value = "user-vote")
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @Column(name = "restaurant_id", nullable = false)
+    @JoinColumn(name = "restaurant_id", nullable = false)
     @NotNull
-    @JsonBackReference
+    @JsonBackReference(value = "restaurant-vote")
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private Restaurant restaurant;
 
     @Column(name = "date_time", nullable = false)

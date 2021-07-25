@@ -86,12 +86,12 @@ public class User extends AbstractBaseEntity implements HasIdAndEmail {
     //TODO add unique index
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
     @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
-    @JsonManagedReference
+    @JsonManagedReference(value = "user-restaurant")
     private Restaurant restaurant;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
     @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
-    @JsonManagedReference
+    @JsonManagedReference(value = "user-vote")
     private Vote vote;
 
     public User(User u) {

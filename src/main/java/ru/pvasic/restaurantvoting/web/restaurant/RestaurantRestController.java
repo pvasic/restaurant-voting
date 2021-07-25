@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.pvasic.restaurantvoting.AuthUser;
-import ru.pvasic.restaurantvoting.model.Dish;
 import ru.pvasic.restaurantvoting.model.Restaurant;
-import ru.pvasic.restaurantvoting.repository.restaurant.RestaurantRepository;
+import ru.pvasic.restaurantvoting.repository.UserRepository;
 import ru.pvasic.restaurantvoting.repository.dish.DishRepository;
+import ru.pvasic.restaurantvoting.repository.restaurant.RestaurantRepository;
 import ru.pvasic.restaurantvoting.util.validation.ValidationUtil;
 
 import java.net.URI;
@@ -40,6 +40,7 @@ public class RestaurantRestController {
 
     private final DishRepository dishRepository;
     private final RestaurantRepository restaurantRepository;
+    private final UserRepository userRepository;
 
     @GetMapping("/user/restaurant/{id}")
     public ResponseEntity<Restaurant> get(@PathVariable int id) {
@@ -67,7 +68,7 @@ public class RestaurantRestController {
         assureIdConsistent(restaurant, id);
         ValidationUtil.checkNotFoundWithId(restaurantRepository.get(id, authUser.id()),
                 "Restaurant id=" + id + " doesn't belong to user id=" + authUser.id());
-        restaurant.setUserId(authUser.id());
+        restaurant.setUser(userRepository.getOne(authUser.id()));
         restaurantRepository.save(restaurant);
     }
 
@@ -75,7 +76,7 @@ public class RestaurantRestController {
     public ResponseEntity<Restaurant> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestBody Restaurant restaurant) {
         log.info("create {} for user {}", restaurant, authUser.id());
         checkNew(restaurant);
-        restaurant.setUserId(authUser.id());
+        restaurant.setUser(userRepository.getOne(authUser.id()));
         Restaurant created = restaurantRepository.save(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/user/restaurant/{id}")
