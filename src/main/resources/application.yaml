@@ -46,6 +46,7 @@ logging:
   level:
     root: WARN
     ru.pvasic.restaurantvoting: DEBUG
+    org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: DEBUG
 
 server.servlet:
   encoding:
