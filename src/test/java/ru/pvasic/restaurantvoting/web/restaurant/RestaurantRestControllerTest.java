@@ -18,8 +18,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT1_ID;
 import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANTS;
-import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT_1;
+import static ru.pvasic.restaurantvoting.RestaurantTestData.restaurant_1;
 import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT_MATCHER;
+import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT_WITH_DISHES_MATCHER;
 import static ru.pvasic.restaurantvoting.TestUtil.readFromJson;
 import static ru.pvasic.restaurantvoting.UserTestData.MANAGER_ID;
 import static ru.pvasic.restaurantvoting.UserTestData.MANAGER_MAIL;
@@ -39,7 +40,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER.contentJson(RESTAURANT_1));
+                .andExpect(RESTAURANT_MATCHER.contentJson(restaurant_1));
     }
 
     @Test
@@ -87,6 +88,12 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    void getWithDishes() {
+    @WithUserDetails(value = USER_MAIL)
+    void getWithDishes() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "user/restaurant/" + RESTAURANT1_ID + "/with-dishes"))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(RESTAURANT_WITH_DISHES_MATCHER.contentJson(restaurant_1));
     }
 }

@@ -20,7 +20,7 @@ public class DishTestData {
     public static final Dish DISH_3 = new Dish(DISH3_ID, "Картошка", 100, LocalDateTime.of(2021, Month.MAY, 8, 18, 0, 0), 3);
     public static final Dish DISH_4 = new Dish(DISH4_ID, "Рис", 200, LocalDateTime.of(2021, Month.MAY, 8, 10, 0, 0), 3);
 
-    public static final List<Dish> DISHES = List.of(DISH_2, DISH_1);
+    public static final List<Dish> dishes = List.of(DISH_1, DISH_2);
 
     public static Dish getUpdated() {
         return new Dish(DISH1_ID, "Обновлённое блюдо", 555, DISH_1.getDateTime().plus(2, ChronoUnit.MINUTES), 2);
