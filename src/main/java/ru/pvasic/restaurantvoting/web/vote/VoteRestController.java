@@ -73,7 +73,7 @@ public class VoteRestController {
         voteRepository.save(vote);
     }
 
-    @PostMapping(value = "/manager/restaurant/{restaurantId}/vote", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/user/restaurant/{restaurantId}/vote", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Vote> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestBody Vote vote, @PathVariable int restaurantId) {
         log.info("create {} for user {}", vote, authUser.id());
         checkNew(vote);
