@@ -47,7 +47,7 @@ public class VoteRestController {
         return ResponseEntity.of(voteRepository.findById(id));
     }
 
-    @DeleteMapping("/manager/vote/{id}")
+    @DeleteMapping("/user/vote/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("delete {} for user {}", id, authUser.id());
