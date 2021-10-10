@@ -25,17 +25,15 @@ public class ValidationUtil {
         }
     }
 
-    public static <T> T checkNotFoundWithId(Optional<T> optional, int id) {
-        return checkNotFoundWithId(optional, "Entity with id=" + id + " not found");
-    }
-
-    public static <T> T checkNotFoundWithId(Optional<T> optional, String msg) {
-        return optional.orElseThrow(() -> new NotFoundException(msg));
-    }
-
     public static void checkSingleModification(int count, String msg) {
         if (count != 1) {
             throw new NotFoundException(msg);
+        }
+    }
+
+    public static void checkModification(int count, int id) {
+        if (count == 0) {
+            throw new NotFoundException("Entity with id=" + id + " not found");
         }
     }
 }

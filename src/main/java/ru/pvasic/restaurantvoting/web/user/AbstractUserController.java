@@ -40,7 +40,7 @@ public abstract class AbstractUserController {
 
     public void delete(int id) {
         log.info("delete {}", id);
-        checkSingleModification(repository.delete(id), "User id=" + id + " not found");
+        repository.deleteExisted(id);
     }
 
     protected User prepareAndSave(User user) {

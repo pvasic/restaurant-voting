@@ -61,7 +61,7 @@ public class ProfileRestController extends AbstractUserController {
     @Transactional
     public void update(@RequestBody UserTo userTo, @AuthenticationPrincipal AuthUser authUser) throws BindException {
         validateBeforeUpdate(userTo, authUser.id());
-        User user = repository.getExisted(userTo.id());
+        User user = repository.getById(userTo.id());
         prepareAndSave(UserUtil.updateFromTo(user, userTo));
     }
 }
