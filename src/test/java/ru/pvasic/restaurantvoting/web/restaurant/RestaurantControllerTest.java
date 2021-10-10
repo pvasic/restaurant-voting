@@ -26,12 +26,12 @@ import static ru.pvasic.restaurantvoting.UserTestData.MANAGER_ID;
 import static ru.pvasic.restaurantvoting.UserTestData.MANAGER_MAIL;
 import static ru.pvasic.restaurantvoting.UserTestData.USER_MAIL;
 
-class RestaurantRestControllerTest extends AbstractControllerTest {
+class RestaurantControllerTest extends AbstractControllerTest {
 
-    private final static String REST_URL = RestaurantRestController.REST_URL + "/";
+    private final static String REST_URL = RestaurantController.REST_URL + "/";
 
     @Autowired
-    private RestaurantRepository restaurantRepository;
+    private RestaurantRepository repository;
 
     @Test
     @WithUserDetails(value = USER_MAIL)
@@ -48,7 +48,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + "manager/restaurant/" + RESTAURANT1_ID))
                 .andExpect(status().isNoContent());
-        assertFalse(restaurantRepository.get(RESTAURANT1_ID, MANAGER_ID).isPresent());
+        assertFalse(repository.get(RESTAURANT1_ID, MANAGER_ID).isPresent());
     }
 
     @Test
@@ -69,7 +69,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON).content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
 
-        RESTAURANT_MATCHER.assertMatch(restaurantRepository.get(RESTAURANT1_ID, MANAGER_ID).get(), updated);
+        RESTAURANT_MATCHER.assertMatch(repository.getById(RESTAURANT1_ID), updated);
     }
 
     @Test
@@ -84,7 +84,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newRestaurant.setId(newId);
         RESTAURANT_MATCHER.assertMatch(created, newRestaurant);
-        RESTAURANT_MATCHER.assertMatch(restaurantRepository.get(newId, MANAGER_ID).get(), newRestaurant);
+        RESTAURANT_MATCHER.assertMatch(repository.getById(newId), newRestaurant);
     }
 
     @Test

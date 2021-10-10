@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.Date;
 
 public class UserTestData {
-    public static final ru.pvasic.restaurantvoting.TestMatcher<User> USER_MATCHER = ru.pvasic.restaurantvoting.TestMatcher.usingIgnoringFieldsComparator(User.class, "registered", "password", "restaurant", "vote");
+    public static final ru.pvasic.restaurantvoting.TestMatcher<User> USER_MATCHER = ru.pvasic.restaurantvoting.TestMatcher.usingIgnoringFieldsComparator(User.class, "registered", "password", "restaurant", "votes");
 
     public static final int USER_ID = 1;
     public static final int MANAGER_ID = 2;

@@ -28,7 +28,7 @@ class DishRestControllerTest extends AbstractControllerTest {
     private final static String REST_URL = DishRestController.REST_URL + "/";
 
     @Autowired
-    private DishRepository dishRepository;
+    private DishRepository repository;
 
     @Test
     @WithUserDetails(value = USER_MAIL)
@@ -45,7 +45,7 @@ class DishRestControllerTest extends AbstractControllerTest {
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + "manager/dish/" + DISH1_ID))
                 .andExpect(status().isNoContent());
-        assertFalse(dishRepository.get(DISH1_ID, MANAGER_ID).isPresent());
+        assertFalse(repository.get(DISH1_ID, MANAGER_ID).isPresent());
     }
 
     @Test
@@ -63,7 +63,7 @@ class DishRestControllerTest extends AbstractControllerTest {
     void update() throws Exception {
         Dish updated = DishTestData.getUpdated();
         performPut(updated);
-        DISH_MATCHER.assertMatch(dishRepository.get(DISH1_ID, MANAGER_ID).get(), updated);
+        DISH_MATCHER.assertMatch(repository.getById(DISH1_ID), updated);
     }
 
     @Test
@@ -76,7 +76,7 @@ class DishRestControllerTest extends AbstractControllerTest {
         int newId = created.id();
         newDish.setId(newId);
         DISH_MATCHER.assertMatch(created, newDish);
-        DISH_MATCHER.assertMatch(dishRepository.get(newId, MANAGER_ID).get(), newDish);
+        DISH_MATCHER.assertMatch(repository.getById(newId), newDish);
     }
 
     @Test
@@ -98,7 +98,7 @@ class DishRestControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(DISH_MATCHER.contentJson(newDish, updated));
-        dishRepository.deleteAll();
+        repository.deleteAll();
     }
 
     private ResultActions getPerformPost(Dish newDish) throws Exception {

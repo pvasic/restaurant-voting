@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.transaction.annotation.Transactional;
-import ru.pvasic.restaurantvoting.util.validation.ValidationUtil;
 
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkModification;
 

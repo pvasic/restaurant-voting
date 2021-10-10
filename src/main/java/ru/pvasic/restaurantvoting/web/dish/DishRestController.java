@@ -20,14 +20,13 @@ import ru.pvasic.restaurantvoting.AuthUser;
 import ru.pvasic.restaurantvoting.model.Dish;
 import ru.pvasic.restaurantvoting.repository.dish.DishRepository;
 import ru.pvasic.restaurantvoting.repository.restaurant.RestaurantRepository;
-import ru.pvasic.restaurantvoting.util.validation.ValidationUtil;
+import ru.pvasic.restaurantvoting.service.Dish.DishService;
 
 import java.net.URI;
 import java.util.List;
 
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew;
-import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkSingleModification;
 
 @RestController
 @RequestMapping(value = DishRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -37,6 +36,7 @@ public class DishRestController {
     static final String REST_URL = "/api/rest";
 
     private final DishRepository dishRepository;
+    private final DishService dishService;
     private final RestaurantRepository restaurantRepository;
 
     @GetMapping("/user/dish/{id}")
@@ -48,8 +48,10 @@ public class DishRestController {
     @DeleteMapping("/manager/dish/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
-        log.info("delete {} for user {}", id, authUser.id());
-        checkSingleModification(dishRepository.delete(id, authUser.id()), "Dish id=" + id + ", user id=" + authUser.id() + " missed");
+        int userId = authUser.id();
+        log.info("delete {} for user {}", id, userId);
+        dishRepository.checkBelong(id, userId);
+        dishRepository.delete(id);
     }
 
     @GetMapping("/user/restaurant/{restaurantId}/dish")
@@ -62,23 +64,19 @@ public class DishRestController {
     @PutMapping(value = "/manager/restaurant/{restaurantId}/dish/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@AuthenticationPrincipal AuthUser authUser, @RequestBody Dish dish, @PathVariable int restaurantId, @PathVariable int id) {
-        log.info("update {} for restaurant {}", dish, authUser.id());
+        int userId = authUser.id();
+        log.info("update {} for restaurant {}", dish, userId);
         assureIdConsistent(dish, id);
-        ValidationUtil.checkNotFoundWithId(dishRepository.get(id, authUser.id()),
-                "Dish id=" + id + ", restaurant id=" + restaurantId + " doesn't belong to user id=" + authUser.id());
-        dish.setRestaurant(restaurantRepository.getOne(restaurantId));
-        dish.setUserId(authUser.id());
-        dishRepository.save(dish);
+        dishRepository.checkBelong(id, userId);
+        dishService.save(dish, userId, restaurantId);
     }
 
     @PostMapping(value = "/manager/restaurant/{restaurantId}/dish", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Dish> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestBody Dish dish, @PathVariable int restaurantId) {
-        log.info("create {} for user {}", dish, authUser.id());
+        int userId = authUser.id();
+        log.info("create {} for user {}", dish, userId);
         checkNew(dish);
-        dish.setUserId(authUser.id());
-        dish.setRestaurant(ValidationUtil.checkNotFoundWithId(restaurantRepository.get(restaurantId, authUser.id()),
-                "Restaurant id=" + restaurantId + " doesn't belong to user id=" + authUser.id()));
-        Dish created = dishRepository.save(dish);
+        Dish created = dishService.save(dish, userId, restaurantId);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/user/dish/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -87,9 +85,9 @@ public class DishRestController {
 
     @GetMapping("/manager/history/restaurant/{restaurantId}")
     public List<Dish> getHistoryAll(@AuthenticationPrincipal AuthUser authUser, @PathVariable int restaurantId) {
-        log.info("getHistoryAll for user {}", authUser.id());
-        ValidationUtil.checkNotFoundWithId(restaurantRepository.get(restaurantId, authUser.id()),
-                "Restaurant id=" + restaurantId + " doesn't belong to user id=" + authUser.id());
+        int userId = authUser.id();
+        log.info("getHistoryAll for user {}", userId);
+        restaurantRepository.checkBelong(restaurantId, userId);
         return dishRepository.getHistoryAll(restaurantId);
     }
 }

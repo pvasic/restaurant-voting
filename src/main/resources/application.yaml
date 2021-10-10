@@ -1,7 +1,8 @@
 #  https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 spring:
   jpa:
-#    defer-datasource-initialization: true
+    # https://stackoverflow.com/a/67678945/548473
+    defer-datasource-initialization: true
     show-sql: true
     open-in-view: false
     hibernate:
