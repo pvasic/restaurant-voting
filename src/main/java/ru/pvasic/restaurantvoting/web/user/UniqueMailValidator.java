@@ -6,7 +6,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import ru.pvasic.restaurantvoting.HasIdAndEmail;
 import ru.pvasic.restaurantvoting.repository.UserRepository;
-import ru.pvasic.restaurantvoting.web.error.GlobalExceptionHandler;
+
+import static ru.pvasic.restaurantvoting.web.error.GlobalExceptionHandler.*;
+
 
 @Component
 @AllArgsConstructor
@@ -25,7 +27,7 @@ public class UniqueMailValidator implements org.springframework.validation.Valid
         if (StringUtils.hasText(user.getEmail())) {
             if (repository.getByEmail(user.getEmail().toLowerCase())
                     .filter(u -> !u.getId().equals(user.getId())).isPresent()) {
-                errors.rejectValue("email", "", GlobalExceptionHandler.EXCEPTION_DUPLICATE_EMAIL);
+                errors.rejectValue("email", "", EXCEPTION_DUPLICATE_EMAIL);
             }
         }
     }

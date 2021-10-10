@@ -21,4 +21,6 @@ public class VoteService {
         vote.setRestaurant(restaurantRepository.getById(restaurantId));
         return voteRepository.save(vote);
     }
+
+
 }
