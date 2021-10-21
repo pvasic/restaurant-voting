@@ -22,7 +22,6 @@ import ru.pvasic.restaurantvoting.repository.vote.VoteRepository;
 import ru.pvasic.restaurantvoting.service.vote.VoteService;
 
 import java.net.URI;
-import java.util.List;
 
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew;
@@ -38,7 +37,7 @@ public class VoteController {
     private final VoteService service;
 
     @GetMapping("/user/vote/{id}")
-    public ResponseEntity<Vote> get(@PathVariable int id) {
+    public ResponseEntity<Vote> get(@PathVariable int id){
         log.info("get vote {}", id);
         return ResponseEntity.of(repository.findById(id));
     }
@@ -46,15 +45,10 @@ public class VoteController {
     @DeleteMapping("/user/vote/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
-        log.info("delete {} for user {}", id, authUser.id());
-        Vote vote = repository.checkBelong(id, authUser.id());
-        repository.delete(vote);
-    }
-
-    @GetMapping("/user/restaurant/{restaurantId}/vote")
-    public List<Vote> getAll(@PathVariable int restaurantId) {
-        log.info("getAll for restaurant {}", restaurantId);
-        return repository.getAll(restaurantId);
+        int userId = authUser.id();
+        log.info("delete {} for user {}", id, userId);
+        Vote vote = repository.checkBelong(id, userId);
+        service.delete(id, vote);
     }
 
 
@@ -64,8 +58,8 @@ public class VoteController {
         int userId = authUser.id();
         log.info("update {} for restaurant {}", id, userId);
         assureIdConsistent(vote, id);
-        repository.checkBelong(id, userId);
-        service.save(vote, userId, restaurantId);
+        Vote voteOld = repository.checkBelong(id, userId);
+        service.update(vote, voteOld, userId, restaurantId);
     }
 
     @PostMapping(value = "/user/restaurant/{restaurantId}/vote", consumes = MediaType.APPLICATION_JSON_VALUE)

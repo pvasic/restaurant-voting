@@ -21,8 +21,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -33,7 +31,6 @@ import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -41,7 +38,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true, exclude = {"password", "restaurant", "vote"})
+@ToString(callSuper = true, exclude = {"password", "restaurant"})
 public class User extends AbstractBaseEntity implements HasIdAndEmail {
 
     @Column(name = "email", nullable = false, unique = true)
@@ -91,11 +88,6 @@ public class User extends AbstractBaseEntity implements HasIdAndEmail {
     @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
     @JsonManagedReference(value = "user-restaurant")
     private Restaurant restaurant;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
-    @JsonManagedReference(value = "user-vote")
-    private List<Vote> votes;
 
     public User(User u) {
         this(u.getId(), u.getFirstName(), u.getLastName(), u.getEmail(), u.getPassword(), u.isEnabled(), u.getRegistered(), u.getRoles());

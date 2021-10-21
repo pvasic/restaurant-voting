@@ -33,6 +33,9 @@ import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew
 @Slf4j
 @AllArgsConstructor
 public class RestaurantController {
+
+    //TODO Divide by different controller user and manager logic
+
     static final String REST_URL = "/api/rest";
 
     private final RestaurantRepository repository;

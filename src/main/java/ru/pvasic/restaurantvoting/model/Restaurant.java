@@ -72,11 +72,6 @@ public class Restaurant extends AbstractBaseEntity implements HasIdAndEmail {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Dish> dishes;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
-    @JsonManagedReference(value = "restaurant-vote")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<Vote> votes;
-
     public Restaurant(Integer id, String name, String address, String email, int voteCount, LocalDateTime dateTime) {
         super(id);
         this.name = name;
