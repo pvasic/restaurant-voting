@@ -10,10 +10,11 @@ import ru.pvasic.restaurantvoting.model.Vote;
 import ru.pvasic.restaurantvoting.repository.restaurant.RestaurantRepository;
 import ru.pvasic.restaurantvoting.repository.vote.VoteRepository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkPositive;
-import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkVoteTime;
+import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkVoteDateTime;
 
 @Service
 @AllArgsConstructor
@@ -22,19 +23,19 @@ public class VoteService {
     private final RestaurantRepository restaurantRepository;
 
     @Transactional
-    public Vote update(Vote vote, Vote voleOld, int userId, int restaurantId) {
-        checkVoteTime(vote);
-        decrementVoteCount(voleOld.getRestaurantId());
-        incrementVoteCount(restaurantId);
-        Vote voteUpdated = new Vote(voleOld.getId(), userId, restaurantId, vote.getDateTime());
+    public Vote update(Vote vote, Vote oldVote, int userId, int restaurantId) {
+        checkVoteDateTime(vote.getId(), vote.getDateTime(), oldVote.getDateTime().toLocalDate());
+        decrementVoteCount(findRestaurant(oldVote.getRestaurantId()));
+        incrementVoteCount(findRestaurant(restaurantId));
+        Vote voteUpdated = new Vote(oldVote.getId(), userId, restaurantId, vote.getDateTime());
         return voteRepository.save(voteUpdated);
     }
 
     @Transactional
     public Vote save(Vote vote, int userId, int restaurantId) {
-        Optional<Vote> oVoteOld = voteRepository.get(userId);
-        if (oVoteOld.isEmpty()) {
-            incrementVoteCount(restaurantId);
+        Optional<Vote> oOldVote = voteRepository.get(userId);
+        if (oOldVote.isEmpty()) {
+            incrementVoteCount(findRestaurant(restaurantId));
             Vote createdVote = new Vote(null, userId, restaurantId, vote.getDateTime());
             return voteRepository.save(createdVote);
         } else {
@@ -44,24 +45,22 @@ public class VoteService {
 
     @Transactional
     public void delete(int id, Vote vote) {
-        checkVoteTime(vote);
-        Integer restaurantId = vote.getRestaurantId();
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(
-                () -> new NotFoundException("Restaurant with id=" + restaurantId + " not found"));
+        checkVoteDateTime(id, LocalDateTime.now(), vote.getDateTime().toLocalDate());
         voteRepository.delete(id);
-        decrementVoteCount(vote.getRestaurantId());
-        restaurantRepository.save(restaurant);
-
+        decrementVoteCount(findRestaurant(vote.getRestaurantId()));
     }
 
-    private void decrementVoteCount(int restaurantId) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow();
+    private Restaurant findRestaurant(Integer restaurantId) {
+        return restaurantRepository.findById(restaurantId).orElseThrow(
+                () -> new NotFoundException("Restaurant with id=" + restaurantId + " not found"));
+    }
+
+    private void decrementVoteCount(Restaurant restaurant) {
         restaurant.setVoteCount(checkPositive(restaurant.getVoteCount()) - 1);
         restaurantRepository.save(restaurant);
     }
 
-    private void incrementVoteCount(int restaurantId) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow();
+    private void incrementVoteCount(Restaurant restaurant) {
         restaurant.setVoteCount(restaurant.getVoteCount() + 1);
         restaurantRepository.save(restaurant);
     }

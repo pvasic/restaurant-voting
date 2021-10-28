@@ -4,7 +4,9 @@ import lombok.experimental.UtilityClass;
 import ru.pvasic.restaurantvoting.HasId;
 import ru.pvasic.restaurantvoting.error.IllegalRequestDataException;
 import ru.pvasic.restaurantvoting.error.NotFoundException;
-import ru.pvasic.restaurantvoting.model.Vote;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static ru.pvasic.restaurantvoting.util.VoteUtil.DEFAULT_VOTE_TIME;
 
@@ -38,9 +40,10 @@ public class ValidationUtil {
         }
     }
 
-    public static void checkVoteTime(Vote vote) {
-        if (!vote.getDateTime().toLocalTime().isBefore(DEFAULT_VOTE_TIME)) {
-            throw new IllegalRequestDataException("Vote time =" + vote.getDateTime() + " should be less " + DEFAULT_VOTE_TIME + " for entity with id=" + vote.getId());
+    public static void checkVoteDateTime(Integer voteId, LocalDateTime voteDateTime, LocalDate oldVoteDate) {
+        if (!voteDateTime.toLocalTime().isBefore(DEFAULT_VOTE_TIME) &&
+                oldVoteDate.atStartOfDay().toLocalDate().isBefore(voteDateTime.toLocalDate())) {
+            throw new IllegalRequestDataException("Vote time =" + voteDateTime + " should be less " + DEFAULT_VOTE_TIME + " for entity with id=" + voteId);
         }
     }
 
