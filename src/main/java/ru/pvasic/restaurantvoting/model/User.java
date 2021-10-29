@@ -28,18 +28,22 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "users_unique_email_idx")})
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "users_unique_email_unique_idx")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true, exclude = {"password", "restaurant"})
-public class User extends AbstractBaseEntity implements HasIdAndEmail {
+public class User extends AbstractBaseEntity implements HasIdAndEmail, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Column(name = "email", nullable = false, unique = true)
     @Email
@@ -83,10 +87,9 @@ public class User extends AbstractBaseEntity implements HasIdAndEmail {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Role> roles;
 
-    //TODO add unique index
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", optional = false)
+    @JsonManagedReference
     @OnDelete(action = OnDeleteAction.CASCADE) //https://stackoverflow.com/a/44988100/548473
-    @JsonManagedReference(value = "user-restaurant")
     private Restaurant restaurant;
 
     public User(User u) {

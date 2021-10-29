@@ -16,6 +16,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -62,13 +63,13 @@ public class Restaurant extends AbstractBaseEntity implements HasIdAndEmail {
     private LocalDateTime dateTime;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    @NotNull
-    @JsonBackReference(value = "user-restaurant")
+    @MapsId
+    @JoinColumn(name = "id")
+    @JsonBackReference
     private User user;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
-    @JsonManagedReference(value = "restaurant-dish")
+    @JsonManagedReference
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Dish> dishes;
 
