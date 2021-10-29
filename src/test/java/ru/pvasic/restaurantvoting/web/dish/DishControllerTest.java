@@ -23,9 +23,9 @@ import static ru.pvasic.restaurantvoting.DishTestData.*;
 import static ru.pvasic.restaurantvoting.RestaurantTestData.*;
 import static ru.pvasic.restaurantvoting.UserTestData.*;
 
-class DishRestControllerTest extends AbstractControllerTest {
+class DishControllerTest extends AbstractControllerTest {
 
-    private final static String REST_URL = DishRestController.REST_URL + "/";
+    private final static String REST_URL = DishController.REST_URL + "/";
 
     @Autowired
     private DishRepository repository;

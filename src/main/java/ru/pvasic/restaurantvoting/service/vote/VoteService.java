@@ -39,7 +39,8 @@ public class VoteService {
             Vote createdVote = new Vote(null, userId, restaurantId, vote.getDateTime());
             return voteRepository.save(createdVote);
         } else {
-            throw new IllegalRequestDataException("Vote with userId =" + userId + " already exists");
+            throw new IllegalRequestDataException("Vote with userId =" + userId +
+                    " already exists, execute PUT method instead POST");
         }
     }
 

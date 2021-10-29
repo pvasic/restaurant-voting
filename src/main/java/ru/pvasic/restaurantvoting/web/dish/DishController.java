@@ -29,11 +29,11 @@ import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.assureId
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew;
 
 @RestController
-@RequestMapping(value = DishRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = DishController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
-public class DishRestController {
-    static final String REST_URL = "/api/rest";
+public class DishController {
+    static final String REST_URL = "/api";
 
     private final DishRepository dishRepository;
     private final DishService dishService;

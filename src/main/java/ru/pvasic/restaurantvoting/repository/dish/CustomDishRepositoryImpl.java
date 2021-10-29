@@ -19,7 +19,6 @@ public class CustomDishRepositoryImpl implements CustomDishRepository{
         return entityManagerFactory.createEntityManager();
     }
 
-    //TODO fix find by restaurantId
     @Override
     public List<Dish> getHistoryAll(int restaurantId){
         AuditReader reader = AuditReaderFactory.get(entityManagerFactory.createEntityManager());

@@ -1,5 +1,6 @@
 # Design and implement a REST API using Hibernate/Spring/SpringMVC (or Spring-Boot) without frontend.
 
+- <a href="https://github.com/JavaWebinar/topjava/blob/doc/doc/graduation.md">Graduation hints</a>
 
 ### Voting system for deciding where to have lunch
 For further reference, please consider the following sections:

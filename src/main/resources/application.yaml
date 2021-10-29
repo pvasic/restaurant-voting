@@ -38,11 +38,6 @@ spring:
       setter: none
       is-getter: none
 
-  data.rest:
-    #  https://docs.spring.io/spring-data/rest/docs/current/reference/html/#getting-started.basic-settings
-    basePath: /api
-    returnBodyOnCreate: true
-
 logging:
   level:
     root: WARN

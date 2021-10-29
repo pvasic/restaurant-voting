@@ -32,7 +32,7 @@ import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew
 @Slf4j
 public class AdminRestController extends AbstractUserController {
 
-    static final String REST_URL = "/api/rest/admin/users";
+    static final String REST_URL = "/api/admin/users";
 
     @Override
     @GetMapping("/{id}")

@@ -34,9 +34,7 @@ import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew
 @AllArgsConstructor
 public class RestaurantController {
 
-    //TODO Divide by different controller user and manager logic
-
-    static final String REST_URL = "/api/rest";
+    static final String REST_URL = "/api";
 
     private final RestaurantRepository repository;
     private final RestaurantService service;

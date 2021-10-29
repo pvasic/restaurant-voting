@@ -32,7 +32,7 @@ import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew
 @RequestMapping(value = ProfileRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 public class ProfileRestController extends AbstractUserController {
-    static final String REST_URL = "/api/rest/profile";
+    static final String REST_URL = "/api/profile";
 
     @GetMapping
     public HttpEntity<User> get(@AuthenticationPrincipal AuthUser authUser) {

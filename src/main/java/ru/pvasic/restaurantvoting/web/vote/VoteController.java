@@ -31,7 +31,7 @@ import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew
 @Slf4j
 @AllArgsConstructor
 public class VoteController {
-    static final String REST_URL = "/api/rest";
+    static final String REST_URL = "/api";
 
     private final VoteRepository repository;
     private final VoteService service;
