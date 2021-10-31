@@ -60,23 +60,21 @@ public class DishController {
         return dishRepository.getAll(restaurantId);
     }
 
-
-    @PutMapping(value = "/manager/restaurant/{restaurantId}/dish/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/manager/dish/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@AuthenticationPrincipal AuthUser authUser, @RequestBody Dish dish, @PathVariable int restaurantId, @PathVariable int id) {
+    public void update(@AuthenticationPrincipal AuthUser authUser, @RequestBody Dish dish, @PathVariable int id) {
         int userId = authUser.id();
         log.info("update {} for restaurant {}", dish, userId);
         assureIdConsistent(dish, id);
-        dishRepository.checkBelong(id, userId);
-        dishService.save(dish, userId, restaurantId);
+        dishService.save(dish, restaurantRepository.checkBelong(userId));
     }
 
-    @PostMapping(value = "/manager/restaurant/{restaurantId}/dish", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Dish> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestBody Dish dish, @PathVariable int restaurantId) {
+    @PostMapping(value = "/manager/dish", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Dish> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestBody Dish dish) {
         int userId = authUser.id();
         log.info("create {} for user {}", dish, userId);
         checkNew(dish);
-        Dish created = dishService.save(dish, userId, restaurantId);
+        Dish created = dishService.save(dish, restaurantRepository.checkBelong(userId));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/user/dish/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -87,7 +85,7 @@ public class DishController {
     public List<Dish> getHistoryAll(@AuthenticationPrincipal AuthUser authUser, @PathVariable int restaurantId) {
         int userId = authUser.id();
         log.info("getHistoryAll for user {}", userId);
-        restaurantRepository.checkBelong(restaurantId, userId);
+        restaurantRepository.checkBelong(userId);
         return dishRepository.getHistoryAll(restaurantId);
     }
 }

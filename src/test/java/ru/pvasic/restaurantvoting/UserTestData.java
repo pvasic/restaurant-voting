@@ -20,7 +20,7 @@ public class UserTestData {
 
     public static final User user = new User(USER_ID, "User_First", "User_Last", USER_MAIL, "userPassword", Role.USER);
     public static final User manager = new User(MANAGER_ID, "Manager_First", "Manager_Last", MANAGER_MAIL, "managerPassword", Role.USER, Role.MANAGER);
-    public static final User admin = new User(ADMIN_ID, "Admin_First", "Admin_Last", ADMIN_MAIL, "adminPassword", Role.ADMIN, Role.USER);
+    public static final User admin = new User(ADMIN_ID, "Admin_First", "Admin_Last", ADMIN_MAIL, "adminPassword", Role.ADMIN, Role.MANAGER);
 
     public static User getNew() {
         return new User(null, "New_First","New_Last", "new@gmail.com", "newPassword",  false, new Date(), Collections.singleton(Role.USER));

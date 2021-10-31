@@ -16,7 +16,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -62,8 +61,8 @@ public class Restaurant extends AbstractBaseEntity implements HasIdAndEmail {
     @NotNull
     private LocalDateTime dateTime;
 
+    // TODO fix proxy (not passed test RestaurantControllerTest
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
     @JoinColumn(name = "id")
     @JsonBackReference
     private User user;

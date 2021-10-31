@@ -102,13 +102,13 @@ class DishControllerTest extends AbstractControllerTest {
     }
 
     private ResultActions getPerformPost(Dish newDish) throws Exception {
-        return perform(MockMvcRequestBuilders.post(REST_URL + "manager/restaurant/" + RESTAURANT1_ID + "/dish/")
+        return perform(MockMvcRequestBuilders.post(REST_URL + "manager/dish/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newDish)));
     }
 
     private void performPut(Dish updated) throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL + "manager/restaurant/" + RESTAURANT1_ID + "/dish/" + DISH1_ID)
+        perform(MockMvcRequestBuilders.put(REST_URL + "manager/dish/" + DISH1_ID)
                 .contentType(MediaType.APPLICATION_JSON).content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
     }

@@ -31,7 +31,7 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true, exclude = {"restaurant"})
 @EntityListeners(AuditingEntityListener.class)
 @Audited
-public class Dish extends AbstractBaseEntity{
+public class Dish extends AbstractBaseEntity {
 
     @NotBlank
     @Size(min = 2, max = 100)
@@ -45,21 +45,16 @@ public class Dish extends AbstractBaseEntity{
     @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
 
-    @Column(name = "user_id", nullable = false)
-    @NotNull
-    private int userId;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @JsonBackReference
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private Restaurant restaurant;
 
-    public Dish(Integer id, String name, int price, LocalDateTime dateTime, int userId) {
+    public Dish(Integer id, String name, int price, LocalDateTime dateTime) {
         super(id);
         this.name = name;
         this.price = price;
         this.dateTime = dateTime;
-        this.userId = userId;
     }
 }

@@ -18,11 +18,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT1_ID;
 import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANTS;
-import static ru.pvasic.restaurantvoting.RestaurantTestData.restaurant_1;
 import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT_MATCHER;
 import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT_WITH_DISHES_MATCHER;
+import static ru.pvasic.restaurantvoting.RestaurantTestData.restaurant_1;
 import static ru.pvasic.restaurantvoting.TestUtil.readFromJson;
-import static ru.pvasic.restaurantvoting.UserTestData.MANAGER_ID;
+import static ru.pvasic.restaurantvoting.UserTestData.ADMIN_MAIL;
 import static ru.pvasic.restaurantvoting.UserTestData.MANAGER_MAIL;
 import static ru.pvasic.restaurantvoting.UserTestData.USER_MAIL;
 
@@ -48,7 +48,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + "manager/restaurant/" + RESTAURANT1_ID))
                 .andExpect(status().isNoContent());
-        assertFalse(repository.get(RESTAURANT1_ID, MANAGER_ID).isPresent());
+        assertFalse(repository.findById(RESTAURANT1_ID).isPresent());
     }
 
     @Test
@@ -73,7 +73,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = MANAGER_MAIL)
+    @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocation() throws Exception {
         Restaurant newRestaurant = RestaurantTestData.getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + "manager/restaurant/")
