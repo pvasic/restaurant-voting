@@ -1,24 +1,27 @@
 package ru.pvasic.restaurantvoting.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.envers.Audited;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.util.ProxyUtils;
 import ru.pvasic.restaurantvoting.HasId;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
-import static ru.pvasic.restaurantvoting.util.HashUtil.HASH_VALUE;
+import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
 @Entity
 @Table(name = "votes")
@@ -33,6 +36,13 @@ public class Vote extends AbstractBaseEntity implements Persistable<Integer>, Ha
     @NotNull
     private Integer restaurantId;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    @ToString.Exclude
+    @Audited(targetAuditMode = NOT_AUDITED)
+    private User user;
+
     @Column(name = "date_time", nullable = false)
     @NotNull
     private LocalDateTime dateTime;
@@ -41,24 +51,5 @@ public class Vote extends AbstractBaseEntity implements Persistable<Integer>, Ha
         super(id);
         this.restaurantId = restaurantId;
         this.dateTime = dateTime;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || !getClass().equals(ProxyUtils.getUserClass(o))) {
-            return false;
-        }
-        Vote that = (Vote) o;
-        if (id != null && id.equals(that.id)) {
-            return getId().equals(that.getId()) && getRestaurantId().equals(that.getRestaurantId()) && getDateTime().equals(that.getDateTime());
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id == null ? HASH_VALUE : id, getRestaurantId(), getDateTime());
     }
 }

@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.data.util.ProxyUtils;
+import org.hibernate.envers.Audited;
 import ru.pvasic.restaurantvoting.HasIdAndEmail;
 import ru.pvasic.restaurantvoting.util.validation.NoHtml;
 
@@ -29,9 +29,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
-import static ru.pvasic.restaurantvoting.util.HashUtil.HASH_VALUE;
+import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
+
 
 @Entity
 @Table(name = "restaurants", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "restaurants_unique_email_unique_idx")})
@@ -66,9 +66,10 @@ public class Restaurant extends AbstractBaseEntity implements HasIdAndEmail {
 
     // TODO fix proxy (not passed test RestaurantControllerTest
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     @JsonBackReference
     @ToString.Exclude
+    @Audited(targetAuditMode = NOT_AUDITED)
     private User user;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
@@ -84,26 +85,5 @@ public class Restaurant extends AbstractBaseEntity implements HasIdAndEmail {
         this.email = email;
         this.voteCount = voteCount;
         this.dateTime = dateTime;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || !getClass().equals(ProxyUtils.getUserClass(o))) {
-            return false;
-        }
-        Restaurant that = (Restaurant) o;
-
-        if (id != null && id.equals(that.id)) {
-            return getId().equals(that.getId()) && getName().equals(that.getName()) && getAddress() == (that.getAddress())
-                    && getEmail().equals(that.getEmail()) && getVoteCount() == that.getVoteCount() && getDateTime().equals(that.getDateTime());
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id == null ? HASH_VALUE : id, getName(), getName(), getAddress(), getEmail(), getVoteCount(), getDateTime());
     }
 }

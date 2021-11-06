@@ -1,6 +1,5 @@
 package ru.pvasic.restaurantvoting.web.vote;
 
-import com.sun.xml.bind.v2.TODO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -11,9 +10,7 @@ import ru.pvasic.restaurantvoting.model.Vote;
 import ru.pvasic.restaurantvoting.repository.vote.VoteRepository;
 import ru.pvasic.restaurantvoting.util.JsonUtil;
 import ru.pvasic.restaurantvoting.web.AbstractControllerTest;
-import ru.pvasic.restaurantvoting.web.VoteTestData;
-
-import javax.persistence.EntityManager;
+import ru.pvasic.restaurantvoting.VoteTestData;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -22,9 +19,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT2_ID;
 import static ru.pvasic.restaurantvoting.TestUtil.readFromJson;
 import static ru.pvasic.restaurantvoting.UserTestData.USER_MAIL;
-import static ru.pvasic.restaurantvoting.web.VoteTestData.VOTE;
-import static ru.pvasic.restaurantvoting.web.VoteTestData.VOTE_ID;
-import static ru.pvasic.restaurantvoting.web.VoteTestData.VOTE_MATCHER;
+import static ru.pvasic.restaurantvoting.VoteTestData.VOTE;
+import static ru.pvasic.restaurantvoting.VoteTestData.VOTE_ID;
+import static ru.pvasic.restaurantvoting.VoteTestData.VOTE_MATCHER;
 
 class VoteControllerTest extends AbstractControllerTest {
 

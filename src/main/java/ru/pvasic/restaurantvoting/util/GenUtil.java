@@ -5,6 +5,8 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 @Getter
-public class HashUtil {
-    public static final int HASH_VALUE = 5;
+public class GenUtil {
+    public static int genInt() {
+        return (int) System.currentTimeMillis();
+    }
 }
