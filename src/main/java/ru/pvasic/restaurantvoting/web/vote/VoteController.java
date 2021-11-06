@@ -2,6 +2,7 @@ package ru.pvasic.restaurantvoting.web.vote;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import ru.pvasic.restaurantvoting.model.Vote;
 import ru.pvasic.restaurantvoting.repository.vote.VoteRepository;
 import ru.pvasic.restaurantvoting.service.vote.VoteService;
 
+import javax.persistence.EntityManager;
 import java.net.URI;
 
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.assureIdConsistent;
@@ -36,40 +38,41 @@ public class VoteController {
     private final VoteRepository repository;
     private final VoteService service;
 
-    @GetMapping("/user/vote/{id}")
+    @GetMapping("/user/votes/{id}")
     public ResponseEntity<Vote> get(@PathVariable int id){
         log.info("get vote {}", id);
         return ResponseEntity.of(repository.findById(id));
     }
 
-    @DeleteMapping("/user/vote/{id}")
+    @DeleteMapping("/user/votes/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         int userId = authUser.id();
         log.info("delete {} for user {}", id, userId);
-        Vote vote = repository.checkBelong(id, userId);
+        Vote vote = repository.checkBelong(userId);
         service.delete(id, vote);
     }
 
 
-    @PutMapping(value = "/user/restaurant/{restaurantId}/vote/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/user/votes/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@AuthenticationPrincipal AuthUser authUser, @RequestBody Vote vote, @PathVariable int restaurantId, @PathVariable int id) {
+    public void update(@AuthenticationPrincipal AuthUser authUser, @RequestBody Vote vote, @PathVariable int id) {
         int userId = authUser.id();
         log.info("update {} for restaurant {}", id, userId);
         assureIdConsistent(vote, id);
-        Vote voteOld = repository.checkBelong(id, userId);
-        service.update(vote, voteOld, userId, restaurantId);
+        Vote voteOld = repository.checkBelong(userId);
+        service.update(vote, voteOld, userId);
     }
 
-    @PostMapping(value = "/user/restaurant/{restaurantId}/vote", consumes = MediaType.APPLICATION_JSON_VALUE)
+    // TODO add parameter instead resource restaurants
+    @PostMapping(value = "/user/restaurant/{restaurantId}/votes", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Vote> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestBody Vote vote, @PathVariable int restaurantId) {
         int userId = authUser.id();
         log.info("create {} for user {}", vote, authUser.id());
         checkNew(vote);
         Vote created = service.save(vote, userId, restaurantId);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/user/vote/{id}")
+                .path(REST_URL + "/user/votes/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }

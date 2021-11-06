@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.util.ProxyUtils;
 import org.springframework.util.CollectionUtils;
 import ru.pvasic.restaurantvoting.HasIdAndEmail;
 import ru.pvasic.restaurantvoting.util.validation.NoHtml;
@@ -33,7 +34,10 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.Objects;
 import java.util.Set;
+
+import static ru.pvasic.restaurantvoting.util.HashUtil.HASH_VALUE;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "users_unique_email_unique_idx")})
@@ -113,5 +117,25 @@ public class User extends AbstractBaseEntity implements HasIdAndEmail, Serializa
 
     public void setRoles(Collection<Role> roles) {
         this.roles = CollectionUtils.isEmpty(roles) ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || !getClass().equals(ProxyUtils.getUserClass(o))) {
+            return false;
+        }
+        User that = (User) o;
+
+        if (id != null && id.equals(that.id)) {
+            return isEnabled() == that.isEnabled() && getEmail().equals(that.getEmail()) && getFirstName().equals(that.getFirstName()) && getLastName().equals(that.getLastName()) && getRegistered().equals(that.getRegistered());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id == null ? HASH_VALUE : id, getEmail(), getFirstName(), getLastName(), isEnabled(), getRegistered());
     }
 }

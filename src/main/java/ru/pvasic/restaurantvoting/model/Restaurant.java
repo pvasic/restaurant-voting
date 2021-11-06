@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.util.ProxyUtils;
 import ru.pvasic.restaurantvoting.HasIdAndEmail;
 import ru.pvasic.restaurantvoting.util.validation.NoHtml;
 
@@ -19,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -27,15 +29,16 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+
+import static ru.pvasic.restaurantvoting.util.HashUtil.HASH_VALUE;
 
 @Entity
-@Table(name = "restaurants")
+@Table(name = "restaurants", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "restaurants_unique_email_unique_idx")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true, exclude = {"dishes", "user"})
 public class Restaurant extends AbstractBaseEntity implements HasIdAndEmail {
-
     @NotBlank
     @Size(min = 2, max = 100)
     @Column(name = "name", nullable = false)
@@ -65,11 +68,13 @@ public class Restaurant extends AbstractBaseEntity implements HasIdAndEmail {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     @JsonBackReference
+    @ToString.Exclude
     private User user;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @JsonManagedReference
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
     private List<Dish> dishes;
 
     public Restaurant(Integer id, String name, String address, String email, int voteCount, LocalDateTime dateTime) {
@@ -79,5 +84,26 @@ public class Restaurant extends AbstractBaseEntity implements HasIdAndEmail {
         this.email = email;
         this.voteCount = voteCount;
         this.dateTime = dateTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || !getClass().equals(ProxyUtils.getUserClass(o))) {
+            return false;
+        }
+        Restaurant that = (Restaurant) o;
+
+        if (id != null && id.equals(that.id)) {
+            return getId().equals(that.getId()) && getName().equals(that.getName()) && getAddress() == (that.getAddress())
+                    && getEmail().equals(that.getEmail()) && getVoteCount() == that.getVoteCount() && getDateTime().equals(that.getDateTime());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id == null ? HASH_VALUE : id, getName(), getName(), getAddress(), getEmail(), getVoteCount(), getDateTime());
     }
 }

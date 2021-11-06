@@ -39,13 +39,13 @@ public class RestaurantController {
     private final RestaurantRepository repository;
     private final RestaurantService service;
 
-    @GetMapping("/user/restaurant/{id}")
+    @GetMapping("/user/restaurants/{id}")
     public ResponseEntity<Restaurant> get(@PathVariable int id) {
         log.info("get restaurant {}", id);
         return ResponseEntity.of(repository.findById(id));
     }
 
-    @DeleteMapping("/manager/restaurant/{id}")
+    @DeleteMapping("/manager/restaurants/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         int userId = authUser.id();
@@ -54,13 +54,13 @@ public class RestaurantController {
         repository.delete(id);
     }
 
-    @GetMapping("/user/restaurant")
+    @GetMapping("/user/restaurants")
     public List<Restaurant> getAll(@AuthenticationPrincipal AuthUser authUser) {
         log.info("getAll restaurants for user {}", authUser.id());
         return repository.findAll(Sort.by(Sort.Direction.ASC, "name", "email"));
     }
 
-    @PutMapping(value = "/manager/restaurant/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/manager/restaurants/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@AuthenticationPrincipal AuthUser authUser, @RequestBody Restaurant restaurant, @PathVariable int id) {
         int userId = authUser.id();
@@ -70,19 +70,19 @@ public class RestaurantController {
         repository.save(restaurant);
     }
 
-    @PostMapping(value = "/manager/restaurant", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/manager/restaurants", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestBody Restaurant restaurant) {
         int userId = authUser.id();
         log.info("create {} for user {}", restaurant, userId);
         checkNew(restaurant);
         Restaurant created = service.save(restaurant, userId);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/user/restaurant/{id}")
+                .path(REST_URL + "/user/restaurants/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @GetMapping(value = "/user/restaurant/{id}/with-dishes")
+    @GetMapping(value = "/user/restaurants/{id}/with-dishes")
     public ResponseEntity<Restaurant> getWithDishes(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         return ResponseEntity.of(repository.getWithDishes(id));
     }

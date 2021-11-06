@@ -18,6 +18,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.util.Objects;
 
 @MappedSuperclass
 //  https://stackoverflow.com/a/6084701/548473
@@ -45,21 +46,16 @@ public abstract class AbstractBaseEntity implements Persistable<Integer>, HasId 
         return id == null;
     }
 
-    //    https://stackoverflow.com/questions/1638723
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || !getClass().equals(ProxyUtils.getUserClass(o))) {
-            return false;
-        }
+        if (this == o) return true;
+        if (!(o instanceof AbstractBaseEntity)) return false;
         AbstractBaseEntity that = (AbstractBaseEntity) o;
-        return id != null && id.equals(that.id);
+        return getId().equals(that.getId());
     }
 
     @Override
     public int hashCode() {
-        return id == null ? 0 : id;
+        return Objects.hash(getId());
     }
 }

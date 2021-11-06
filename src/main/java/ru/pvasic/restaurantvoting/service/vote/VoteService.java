@@ -23,20 +23,21 @@ public class VoteService {
     private final RestaurantRepository restaurantRepository;
 
     @Transactional
-    public Vote update(Vote vote, Vote oldVote, int userId, int restaurantId) {
+    public Vote update(Vote vote, Vote oldVote, int userId) {
         checkVoteDateTime(vote.getId(), vote.getDateTime(), oldVote.getDateTime().toLocalDate());
         decrementVoteCount(findRestaurant(oldVote.getRestaurantId()));
-        incrementVoteCount(findRestaurant(restaurantId));
-        Vote voteUpdated = new Vote(oldVote.getId(), userId, restaurantId, vote.getDateTime());
+        int voteRestaurantId = vote.getRestaurantId();
+        incrementVoteCount(findRestaurant(voteRestaurantId));
+        Vote voteUpdated = new Vote(userId, voteRestaurantId, vote.getDateTime());
         return voteRepository.save(voteUpdated);
     }
 
     @Transactional
     public Vote save(Vote vote, int userId, int restaurantId) {
-        Optional<Vote> oOldVote = voteRepository.get(userId);
+        Optional<Vote> oOldVote = voteRepository.findById(userId);
         if (oOldVote.isEmpty()) {
             incrementVoteCount(findRestaurant(restaurantId));
-            Vote createdVote = new Vote(null, userId, restaurantId, vote.getDateTime());
+            Vote createdVote = new Vote(null, restaurantId, vote.getDateTime());
             return voteRepository.save(createdVote);
         } else {
             throw new IllegalRequestDataException("Vote with userId =" + userId +

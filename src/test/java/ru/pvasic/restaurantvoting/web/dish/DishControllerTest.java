@@ -33,7 +33,7 @@ class DishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "user/dish/" + DISH1_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL + "user/dishes/" + DISH1_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -43,7 +43,7 @@ class DishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = MANAGER_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + "manager/dish/" + DISH1_ID))
+        perform(MockMvcRequestBuilders.delete(REST_URL + "manager/dishes/" + DISH1_ID))
                 .andExpect(status().isNoContent());
         assertFalse(repository.get(DISH1_ID, MANAGER_ID).isPresent());
     }
@@ -51,7 +51,7 @@ class DishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void getAll() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "user/restaurant/" + RESTAURANT1_ID + "/dish"))
+        perform(MockMvcRequestBuilders.get(REST_URL + "user/restaurants/" + RESTAURANT1_ID + "/dishes"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -93,7 +93,7 @@ class DishControllerTest extends AbstractControllerTest {
         Dish updated = DishTestData.getUpdated();
         performPut(updated);
         DISH_MATCHER.assertMatch(created, newDish);
-        perform(MockMvcRequestBuilders.get(REST_URL + "manager/history/restaurant/" + RESTAURANT1_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL + "manager/history/restaurants/" + RESTAURANT1_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -102,13 +102,13 @@ class DishControllerTest extends AbstractControllerTest {
     }
 
     private ResultActions getPerformPost(Dish newDish) throws Exception {
-        return perform(MockMvcRequestBuilders.post(REST_URL + "manager/dish/")
+        return perform(MockMvcRequestBuilders.post(REST_URL + "manager/dishes/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newDish)));
     }
 
     private void performPut(Dish updated) throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL + "manager/dish/" + DISH1_ID)
+        perform(MockMvcRequestBuilders.put(REST_URL + "manager/dishes/" + DISH1_ID)
                 .contentType(MediaType.APPLICATION_JSON).content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
     }

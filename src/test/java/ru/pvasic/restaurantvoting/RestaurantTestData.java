@@ -17,7 +17,7 @@ public class RestaurantTestData {
             ru.pvasic.restaurantvoting.TestMatcher.usingAssertions(Restaurant.class,
 //     No need use ignoringAllOverriddenEquals, see https://assertj.github.io/doc/#breaking-changes
                     (a, e) -> assertThat(a).usingRecursiveComparison()
-                            .ignoringFields("user", "votes", "dishes.restaurant").isEqualTo(e),
+                            .ignoringFields("user", "dishes.restaurant").isEqualTo(e),
                     (a, e) -> {
                         throw new UnsupportedOperationException();
                     });

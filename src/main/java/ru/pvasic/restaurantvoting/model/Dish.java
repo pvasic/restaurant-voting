@@ -9,6 +9,8 @@ import lombok.ToString;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.util.ProxyUtils;
+import ru.pvasic.restaurantvoting.util.HashUtil;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +24,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.Objects;
+
+import static ru.pvasic.restaurantvoting.util.HashUtil.*;
 
 @Entity(name = "Dish")
 @Table(name = "dishes", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "date_time"}, name = "dishes_unique_name_date_time_idx")})
@@ -56,5 +61,26 @@ public class Dish extends AbstractBaseEntity {
         this.name = name;
         this.price = price;
         this.dateTime = dateTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || !getClass().equals(ProxyUtils.getUserClass(o))) {
+            return false;
+        }
+        Dish that = (Dish) o;
+
+        if (id != null && id.equals(that.id)) {
+            return getId().equals(that.getId()) && getName().equals(that.getName()) && getPrice() == (that.getPrice())
+                    && getDateTime().equals(that.getDateTime());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id == null ? HASH_VALUE : id, getName(), getPrice(), getDateTime());
     }
 }
