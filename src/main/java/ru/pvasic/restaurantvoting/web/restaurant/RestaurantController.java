@@ -50,7 +50,7 @@ public class RestaurantController {
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         int userId = authUser.id();
         log.info("delete {} for restaurant {}", id, userId);
-        repository.checkBelong(userId);
+        repository.checkBelong(id, userId);
         repository.delete(id);
     }
 
@@ -66,7 +66,7 @@ public class RestaurantController {
         int userId = authUser.id();
         log.info("update {} restaurant {}", restaurant, userId);
         assureIdConsistent(restaurant, id);
-        repository.checkBelong(userId);
+        repository.checkBelong(id, userId);
         repository.save(restaurant);
     }
 

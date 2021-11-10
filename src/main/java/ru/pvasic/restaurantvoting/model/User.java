@@ -1,6 +1,5 @@
 package ru.pvasic.restaurantvoting.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,7 +20,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
@@ -86,19 +84,6 @@ public class User extends AbstractBaseEntity implements HasIdAndEmail, Serializa
     @JoinColumn(name = "user_id") //https://stackoverflow.com/a/62848296/548473
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Role> roles;
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", optional = false)
-    @JsonManagedReference
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @ToString.Exclude //https://stackoverflow.com/a/44988100/548473
-    private Restaurant restaurant;
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", optional = false)
-    @JsonManagedReference
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @ToString.Exclude //https://stackoverflow.com/a/44988100/548473
-    private Vote vote;
-
 
     public User(User u) {
         this(u.getId(), u.getFirstName(), u.getLastName(), u.getEmail(), u.getPassword(), u.isEnabled(), u.getRegistered(), u.getRoles());

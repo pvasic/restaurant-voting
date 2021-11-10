@@ -24,20 +24,21 @@ public class VoteService {
 
     @Transactional
     public Vote update(Vote vote, Vote oldVote, int userId) {
-        checkVoteDateTime(vote.getId(), vote.getDateTime(), oldVote.getDateTime().toLocalDate());
+        checkVoteDateTime(vote.id(), vote.getDateTime(), oldVote.getDateTime().toLocalDate());
         decrementVoteCount(findRestaurant(oldVote.getRestaurantId()));
         int voteRestaurantId = vote.getRestaurantId();
         incrementVoteCount(findRestaurant(voteRestaurantId));
-        Vote voteUpdated = new Vote(userId, voteRestaurantId, vote.getDateTime());
-        return voteRepository.save(voteUpdated);
+        vote.setUserId(userId);
+        return voteRepository.save(vote);
     }
 
     @Transactional
-    public Vote save(Vote vote, int userId, int restaurantId) {
+    public Vote save(Vote vote, int userId, Integer restaurantId) {
         Optional<Vote> oOldVote = voteRepository.findById(userId);
         if (oOldVote.isEmpty()) {
-            incrementVoteCount(findRestaurant(restaurantId));
-            Vote createdVote = new Vote(null, restaurantId, vote.getDateTime());
+            Restaurant restaurant = restaurantRepository.checkByRestaurantId(restaurantId);
+            incrementVoteCount(restaurant);
+            Vote createdVote = new Vote(null, userId, restaurantId, vote.getDateTime());
             return voteRepository.save(createdVote);
         } else {
             throw new IllegalRequestDataException("Vote with userId =" + userId +
@@ -46,10 +47,10 @@ public class VoteService {
     }
 
     @Transactional
-    public void delete(int id, Vote vote) {
+    public void delete(int id, Vote vote, Restaurant restaurant) {
         checkVoteDateTime(id, LocalDateTime.now(), vote.getDateTime().toLocalDate());
         voteRepository.delete(id);
-        decrementVoteCount(findRestaurant(vote.getRestaurantId()));
+        decrementVoteCount(restaurant);
     }
 
     private Restaurant findRestaurant(Integer restaurantId) {

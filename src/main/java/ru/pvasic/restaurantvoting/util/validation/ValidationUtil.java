@@ -41,9 +41,11 @@ public class ValidationUtil {
     }
 
     public static void checkVoteDateTime(Integer voteId, LocalDateTime voteDateTime, LocalDate oldVoteDate) {
-        if (!voteDateTime.toLocalTime().isBefore(DEFAULT_VOTE_TIME) &&
-                oldVoteDate.atStartOfDay().toLocalDate().isBefore(voteDateTime.toLocalDate())) {
-            throw new IllegalRequestDataException("Vote time =" + voteDateTime + " should be less " + DEFAULT_VOTE_TIME + " for entity with id=" + voteId);
+        boolean check = oldVoteDate.atStartOfDay().toLocalDate().equals(voteDateTime.toLocalDate());
+        if (check) {
+            if (!voteDateTime.toLocalTime().isBefore(DEFAULT_VOTE_TIME)) {
+                throw new IllegalRequestDataException("Vote time =" + voteDateTime + " should be less " + DEFAULT_VOTE_TIME + ", for entity with id=" + voteId);
+            }
         }
     }
 
@@ -51,7 +53,7 @@ public class ValidationUtil {
         if (voteCount >= 0) {
             return voteCount;
         } else {
-            throw new IllegalRequestDataException("Vote count =" + voteCount + "must be greater 0");
+            throw new IllegalRequestDataException("Vote count =" + voteCount + " must be greater 0");
         }
     }
 }

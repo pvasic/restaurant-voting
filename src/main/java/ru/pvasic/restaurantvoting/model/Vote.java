@@ -1,11 +1,9 @@
 package ru.pvasic.restaurantvoting.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.envers.Audited;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -14,14 +12,9 @@ import ru.pvasic.restaurantvoting.HasId;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-
-import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
 @Entity
 @Table(name = "votes")
@@ -36,19 +29,17 @@ public class Vote extends AbstractBaseEntity implements Persistable<Integer>, Ha
     @NotNull
     private Integer restaurantId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    @JsonBackReference
-    @ToString.Exclude
-    @Audited(targetAuditMode = NOT_AUDITED)
-    private User user;
+    @Column(name = "user_id")
+    @NotNull
+    private Integer userId;
 
     @Column(name = "date_time", nullable = false)
     @NotNull
     private LocalDateTime dateTime;
 
-    public Vote(Integer id, @NotNull Integer restaurantId, @NotNull LocalDateTime dateTime) {
+    public Vote(Integer id, Integer userId, Integer restaurantId, LocalDateTime dateTime) {
         super(id);
+        this.userId = userId;
         this.restaurantId = restaurantId;
         this.dateTime = dateTime;
     }

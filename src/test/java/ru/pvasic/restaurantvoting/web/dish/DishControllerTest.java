@@ -8,20 +8,25 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.pvasic.restaurantvoting.DishTestData;
 import ru.pvasic.restaurantvoting.model.Dish;
 import ru.pvasic.restaurantvoting.repository.dish.DishRepository;
 import ru.pvasic.restaurantvoting.util.JsonUtil;
 import ru.pvasic.restaurantvoting.web.AbstractControllerTest;
-import ru.pvasic.restaurantvoting.DishTestData;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.pvasic.restaurantvoting.DishTestData.DISH1_ID;
+import static ru.pvasic.restaurantvoting.DishTestData.DISH_1;
+import static ru.pvasic.restaurantvoting.DishTestData.DISH_MATCHER;
+import static ru.pvasic.restaurantvoting.DishTestData.dishes;
+import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT1_ID;
 import static ru.pvasic.restaurantvoting.TestUtil.readFromJson;
-import static ru.pvasic.restaurantvoting.DishTestData.*;
-import static ru.pvasic.restaurantvoting.RestaurantTestData.*;
-import static ru.pvasic.restaurantvoting.UserTestData.*;
+import static ru.pvasic.restaurantvoting.UserTestData.MANAGER_ID;
+import static ru.pvasic.restaurantvoting.UserTestData.MANAGER_MAIL;
+import static ru.pvasic.restaurantvoting.UserTestData.USER_MAIL;
 
 class DishControllerTest extends AbstractControllerTest {
 
@@ -43,7 +48,7 @@ class DishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = MANAGER_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + "manager/dishes/" + DISH1_ID))
+        perform(MockMvcRequestBuilders.delete(REST_URL + "manager/restaurants/" + RESTAURANT1_ID + "/dishes/" + DISH1_ID))
                 .andExpect(status().isNoContent());
         assertFalse(repository.get(DISH1_ID, MANAGER_ID).isPresent());
     }
@@ -67,6 +72,7 @@ class DishControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Transactional(propagation = Propagation.REQUIRED)
     @WithUserDetails(value = MANAGER_MAIL)
     void createWithLocation() throws Exception {
         Dish newDish = DishTestData.getNew();
@@ -102,7 +108,7 @@ class DishControllerTest extends AbstractControllerTest {
     }
 
     private ResultActions getPerformPost(Dish newDish) throws Exception {
-        return perform(MockMvcRequestBuilders.post(REST_URL + "manager/dishes/")
+        return perform(MockMvcRequestBuilders.post(REST_URL + "manager/restaurants/" + RESTAURANT1_ID + "/dishes/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newDish)));
     }

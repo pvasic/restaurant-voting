@@ -39,6 +39,10 @@ import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Restaurant extends AbstractBaseEntity implements HasIdAndEmail {
+    @Column(name = "user_id")
+    @NotNull
+    private Integer userId;
+
     @NotBlank
     @Size(min = 2, max = 100)
     @Column(name = "name", nullable = false)
@@ -64,22 +68,15 @@ public class Restaurant extends AbstractBaseEntity implements HasIdAndEmail {
     @NotNull
     private LocalDateTime dateTime;
 
-    // TODO fix proxy (not passed test RestaurantControllerTest
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    @JsonBackReference
-    @ToString.Exclude
-    @Audited(targetAuditMode = NOT_AUDITED)
-    private User user;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @JsonManagedReference
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     private List<Dish> dishes;
 
-    public Restaurant(Integer id, String name, String address, String email, int voteCount, LocalDateTime dateTime) {
+    public Restaurant(Integer id, Integer userId, String name, String address, String email, int voteCount, LocalDateTime dateTime) {
         super(id);
+        this.userId = userId;
         this.name = name;
         this.address = address;
         this.email = email;

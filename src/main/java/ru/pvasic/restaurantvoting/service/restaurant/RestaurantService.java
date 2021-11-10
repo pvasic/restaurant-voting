@@ -11,11 +11,10 @@ import ru.pvasic.restaurantvoting.repository.restaurant.RestaurantRepository;
 @AllArgsConstructor
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
-    private final UserRepository userRepository;
 
     @Transactional
     public Restaurant save(Restaurant restaurant, int userId) {
-        restaurant.setUser(userRepository.getById(userId));
+        restaurant.setUserId(userId);
         return restaurantRepository.save(restaurant);
     }
 }

@@ -12,12 +12,20 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface RestaurantRepository extends BaseRepository<Restaurant> {
 
+    @Query("SELECT r FROM Restaurant r WHERE r.id = :id and r.userId = :userId")
+    Optional<Restaurant> get(int id, int userId);
+
     @EntityGraph(attributePaths = {"dishes"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT r FROM Restaurant r WHERE r.id=?1")
     Optional<Restaurant> getWithDishes(int id);
 
-    default Restaurant checkBelong(int userId) {
-        return findById(userId).orElseThrow(
-                () -> new IllegalRequestDataException("Restaurant for User id =" + userId + " doesn't exist"));
+    default Restaurant checkBelong(int id, int userId) {
+        return get(id, userId).orElseThrow(
+                () -> new IllegalRequestDataException("Restaurant for id =" + id + " doesn't belong to User id=" + userId));
+    }
+
+    default Restaurant checkByRestaurantId(int id) {
+        return findById(id).orElseThrow(
+                () -> new IllegalRequestDataException("Restaurant for id =" + id + " not found!"));
     }
 }

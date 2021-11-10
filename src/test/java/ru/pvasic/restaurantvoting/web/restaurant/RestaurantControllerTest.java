@@ -23,6 +23,7 @@ import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT_WITH_DISH
 import static ru.pvasic.restaurantvoting.RestaurantTestData.restaurant_1;
 import static ru.pvasic.restaurantvoting.TestUtil.readFromJson;
 import static ru.pvasic.restaurantvoting.UserTestData.ADMIN_MAIL;
+import static ru.pvasic.restaurantvoting.UserTestData.MANAGER_ID;
 import static ru.pvasic.restaurantvoting.UserTestData.MANAGER_MAIL;
 import static ru.pvasic.restaurantvoting.UserTestData.USER_MAIL;
 
@@ -48,7 +49,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + "manager/restaurants/" + RESTAURANT1_ID))
                 .andExpect(status().isNoContent());
-        assertFalse(repository.findById(RESTAURANT1_ID).isPresent());
+        assertFalse(repository.get(RESTAURANT1_ID, MANAGER_ID).isPresent());
     }
 
     @Test

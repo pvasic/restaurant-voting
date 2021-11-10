@@ -21,8 +21,8 @@ public interface DishRepository extends BaseRepository<Dish>, CustomDishReposito
     @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.id = ?1 and d.restaurant.id = ?2")
     Optional<Dish> getWithRestaurant(int id, int restaurantId);
 
-    default Dish checkBelong(int id, int userId) {
-        return get(id, userId).orElseThrow(
-                () -> new IllegalRequestDataException("Dish id=" + id + " doesn't belong to User id=" + userId));
+    default Dish checkBelong(int id, int restaurantId) {
+        return get(id, restaurantId).orElseThrow(
+                () -> new IllegalRequestDataException("Dish id=" + id + " doesn't belong to restaurant id=" + restaurantId));
     }
 }

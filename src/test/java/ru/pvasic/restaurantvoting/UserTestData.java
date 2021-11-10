@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.Date;
 
 public class UserTestData {
-    public static final ru.pvasic.restaurantvoting.TestMatcher<User> USER_MATCHER = ru.pvasic.restaurantvoting.TestMatcher.usingIgnoringFieldsComparator(User.class, "registered", "password", "restaurant", "votes");
+    public static final ru.pvasic.restaurantvoting.TestMatcher<User> USER_MATCHER = ru.pvasic.restaurantvoting.TestMatcher.usingIgnoringFieldsComparator(User.class, "registered", "password", "restaurant");
 
     public static final int USER_ID = 1;
     public static final int MANAGER_ID = 2;
@@ -23,7 +23,7 @@ public class UserTestData {
     public static final User admin = new User(ADMIN_ID, "Admin_First", "Admin_Last", ADMIN_MAIL, "adminPassword", Role.ADMIN, Role.MANAGER);
 
     public static User getNew() {
-        return new User(null, "New_First","New_Last", "new@gmail.com", "newPassword",  false, new Date(), Collections.singleton(Role.USER));
+        return new User(null, "New_First", "New_Last", "new@gmail.com", "newPassword", false, new Date(), Collections.singleton(Role.USER));
     }
 
     public static User getUpdated() {
