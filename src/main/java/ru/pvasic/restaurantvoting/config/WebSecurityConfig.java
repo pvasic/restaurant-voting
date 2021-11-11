@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -50,8 +51,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
                 .antMatchers("/api/manager/**").hasRole(Role.MANAGER.name())
-                .antMatchers("/api/profile/register").anonymous()
-                .antMatchers("/api/user**").authenticated()
+                .antMatchers(HttpMethod.POST, "/api/profile").anonymous()
+                .antMatchers("/api/**").authenticated()
+
                 .and().httpBasic()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable();

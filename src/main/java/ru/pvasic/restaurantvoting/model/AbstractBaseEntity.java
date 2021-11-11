@@ -11,7 +11,6 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.util.ProxyUtils;
 import org.springframework.util.Assert;
 import ru.pvasic.restaurantvoting.HasId;
-import ru.pvasic.restaurantvoting.util.GenUtil;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -19,7 +18,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import java.util.Objects;
 
 @MappedSuperclass
 //  https://stackoverflow.com/a/6084701/548473
@@ -49,22 +47,18 @@ public abstract class AbstractBaseEntity implements Persistable<Integer>, HasId 
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
         if (o == null || !getClass().equals(ProxyUtils.getUserClass(o))) {
             return false;
         }
         AbstractBaseEntity that = (AbstractBaseEntity) o;
-
-        if (id != null && id.equals(that.id)) {
-            return getId().equals(that.getId());
-        } else {
-            return false;
-        }
+        return id != null && id.equals(that.id);
     }
-
 
     @Override
     public int hashCode() {
-        return Objects.hash(id == null ? GenUtil.genInt() : GenUtil.genInt() * id);
+        return id == null ? 0 : id;
     }
 }

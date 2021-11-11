@@ -36,12 +36,11 @@ class ProfileRestControllerTest extends AbstractControllerTest {
                 .andExpect(USER_MATCHER.contentJson(user));
     }
 
-//    @Test
-//    @WithUserDetails()
-//    void getUnAuth() throws Exception {
-//        perform(MockMvcRequestBuilders.get(REST_URL))
-//                .andExpect(status().isUnauthorized());
-//    }
+    @Test
+    void getUnAuth() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL))
+                .andExpect(status().isUnauthorized());
+    }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
@@ -55,7 +54,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     void register() throws Exception {
         UserTo newTo = new UserTo(null, "New_First", "New_Last", "new@gmail.com", "newPass");
         User newUser = UserUtil.createNewFromTo(newTo);
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + "/register")
+        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newTo)))
                 .andDo(print())
@@ -83,7 +82,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     @Test
     void registerInvalid() throws Exception {
         UserTo newTo = new UserTo(null, null, null, null, null);
-        perform(MockMvcRequestBuilders.post(REST_URL + "/register")
+        perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newTo)))
                 .andDo(print())

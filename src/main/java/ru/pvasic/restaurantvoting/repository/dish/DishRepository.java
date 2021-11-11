@@ -18,6 +18,7 @@ public interface DishRepository extends BaseRepository<Dish>, CustomDishReposito
     @Query("SELECT d FROM Dish d WHERE d.restaurant.id=:restaurantId ORDER BY d.dateTime DESC")
     List<Dish> getAll(int restaurantId);
 
+    //TODO add
     @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.id = ?1 and d.restaurant.id = ?2")
     Optional<Dish> getWithRestaurant(int id, int restaurantId);
 
