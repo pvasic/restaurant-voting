@@ -72,7 +72,6 @@ class DishControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Transactional(propagation = Propagation.REQUIRED)
     @WithUserDetails(value = MANAGER_MAIL)
     void createWithLocation() throws Exception {
         Dish newDish = DishTestData.getNew();

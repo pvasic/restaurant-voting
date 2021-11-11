@@ -33,8 +33,7 @@ class VoteControllerTest extends AbstractControllerTest {
     VoteRepository repository;
 
     @Test
-//    TODO fix (test passed without authorization)
-//    @WithUserDetails(value = USER_MAIL)
+    @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + "user/votes/" + VOTE_ID))
                 .andExpect(status().isOk())
