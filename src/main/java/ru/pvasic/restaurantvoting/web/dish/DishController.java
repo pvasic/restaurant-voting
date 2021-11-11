@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.pvasic.restaurantvoting.AuthUser;
 import ru.pvasic.restaurantvoting.model.Dish;
+import ru.pvasic.restaurantvoting.model.Restaurant;
 import ru.pvasic.restaurantvoting.repository.dish.DishRepository;
 import ru.pvasic.restaurantvoting.repository.restaurant.RestaurantRepository;
 import ru.pvasic.restaurantvoting.service.Dish.DishService;
@@ -39,53 +40,54 @@ public class DishController {
     private final DishService dishService;
     private final RestaurantRepository restaurantRepository;
 
-    @GetMapping("/user/dish/{id}")
+    @GetMapping("/user/dishes/{id}")
     public ResponseEntity<Dish> get(@PathVariable int id) {
         log.info("get dish {}", id);
         return ResponseEntity.of(dishRepository.findById(id));
     }
 
-    @DeleteMapping("/manager/dish/{id}")
+    @DeleteMapping("/manager/restaurants/{restaurantId}/dishes/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
+    public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int restaurantId, @PathVariable int id) {
         int userId = authUser.id();
-        log.info("delete {} for user {}", id, userId);
-        dishRepository.checkBelong(id, userId);
+        log.info("delete dish with id = {} for user {}", id, userId);
+        dishRepository.checkBelong(id, restaurantId);
         dishRepository.delete(id);
     }
 
-    @GetMapping("/user/restaurant/{restaurantId}/dish")
+    @GetMapping("/user/restaurants/{restaurantId}/dishes")
     public List<Dish> getAll(@PathVariable int restaurantId) {
-        log.info("getAll for restaurant {}", restaurantId);
+        log.info("getAll dishes for restaurant {}", restaurantId);
         return dishRepository.getAll(restaurantId);
     }
 
-    @PutMapping(value = "/manager/dish/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/manager/dishes/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@AuthenticationPrincipal AuthUser authUser, @RequestBody Dish dish, @PathVariable int id) {
         int userId = authUser.id();
         log.info("update {} for restaurant {}", dish, userId);
         assureIdConsistent(dish, id);
-        dishService.save(dish, restaurantRepository.checkBelong(userId));
+        dishService.save(dish, restaurantRepository.checkBelong(id, userId));
     }
 
-    @PostMapping(value = "/manager/dish", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Dish> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestBody Dish dish) {
+    @PostMapping(value = "/manager/restaurants/{restaurant_id}/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Dish> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestBody Dish dish, @PathVariable int restaurant_id) {
         int userId = authUser.id();
         log.info("create {} for user {}", dish, userId);
         checkNew(dish);
-        Dish created = dishService.save(dish, restaurantRepository.checkBelong(userId));
+        Restaurant restaurant = restaurantRepository.checkBelong(restaurant_id, userId);
+        Dish created = dishService.save(dish, restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/user/dish/{id}")
+                .path(REST_URL + "/user/dishes/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @GetMapping("/manager/history/restaurant/{restaurantId}")
+    @GetMapping("/manager/history/restaurants/{restaurantId}")
     public List<Dish> getHistoryAll(@AuthenticationPrincipal AuthUser authUser, @PathVariable int restaurantId) {
         int userId = authUser.id();
-        log.info("getHistoryAll for user {}", userId);
-        restaurantRepository.checkBelong(userId);
+        log.info("get restaurant history for user {}", userId);
+        restaurantRepository.checkBelong(restaurantId, userId);
         return dishRepository.getHistoryAll(restaurantId);
     }
 }

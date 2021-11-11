@@ -23,6 +23,7 @@ import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT_WITH_DISH
 import static ru.pvasic.restaurantvoting.RestaurantTestData.restaurant_1;
 import static ru.pvasic.restaurantvoting.TestUtil.readFromJson;
 import static ru.pvasic.restaurantvoting.UserTestData.ADMIN_MAIL;
+import static ru.pvasic.restaurantvoting.UserTestData.MANAGER_ID;
 import static ru.pvasic.restaurantvoting.UserTestData.MANAGER_MAIL;
 import static ru.pvasic.restaurantvoting.UserTestData.USER_MAIL;
 
@@ -36,7 +37,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "user/restaurant/" + RESTAURANT1_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL + "user/restaurants/" + RESTAURANT1_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -46,15 +47,15 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = MANAGER_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + "manager/restaurant/" + RESTAURANT1_ID))
+        perform(MockMvcRequestBuilders.delete(REST_URL + "manager/restaurants/" + RESTAURANT1_ID))
                 .andExpect(status().isNoContent());
-        assertFalse(repository.findById(RESTAURANT1_ID).isPresent());
+        assertFalse(repository.get(RESTAURANT1_ID, MANAGER_ID).isPresent());
     }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void getAll() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "user/restaurant"))
+        perform(MockMvcRequestBuilders.get(REST_URL + "user/restaurants"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -65,7 +66,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = MANAGER_MAIL)
     void update() throws Exception {
         Restaurant updated = RestaurantTestData.getUpdated();
-        perform(MockMvcRequestBuilders.put(REST_URL + "manager/restaurant/" + RESTAURANT1_ID)
+        perform(MockMvcRequestBuilders.put(REST_URL + "manager/restaurants/" + RESTAURANT1_ID)
                 .contentType(MediaType.APPLICATION_JSON).content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
 
@@ -76,7 +77,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocation() throws Exception {
         Restaurant newRestaurant = RestaurantTestData.getNew();
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + "manager/restaurant/")
+        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + "manager/restaurants/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newRestaurant)));
 
@@ -90,7 +91,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void getWithDishes() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "user/restaurant/" + RESTAURANT1_ID + "/with-dishes"))
+        perform(MockMvcRequestBuilders.get(REST_URL + "user/restaurants/" + RESTAURANT1_ID + "/with-dishes"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

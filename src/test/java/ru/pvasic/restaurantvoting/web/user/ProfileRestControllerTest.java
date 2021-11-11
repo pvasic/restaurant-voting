@@ -52,9 +52,9 @@ class ProfileRestControllerTest extends AbstractControllerTest {
 
     @Test
     void register() throws Exception {
-        UserTo newTo = new UserTo(null, "New_First","New_Last", "new@gmail.com", "newPass");
+        UserTo newTo = new UserTo(null, "New_First", "New_Last", "new@gmail.com", "newPass");
         User newUser = UserUtil.createNewFromTo(newTo);
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + "/register")
+        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newTo)))
                 .andDo(print())
@@ -70,7 +70,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void update() throws Exception {
-        UserTo updatedTo = new UserTo(null, "UpdatedFirst","UpdatedLast", USER_MAIL, "updatedPassword");
+        UserTo updatedTo = new UserTo(null, "UpdatedFirst", "UpdatedLast", USER_MAIL, "updatedPassword");
         perform(MockMvcRequestBuilders.put(REST_URL).contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedTo)))
                 .andDo(print())
@@ -82,7 +82,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     @Test
     void registerInvalid() throws Exception {
         UserTo newTo = new UserTo(null, null, null, null, null);
-        perform(MockMvcRequestBuilders.post(REST_URL + "/register")
+        perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newTo)))
                 .andDo(print())
@@ -92,7 +92,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void updateInvalid() throws Exception {
-        UserTo updatedTo = new UserTo(null, null, null,"password", null);
+        UserTo updatedTo = new UserTo(null, null, null, "password", null);
         perform(MockMvcRequestBuilders.put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedTo)))
@@ -103,7 +103,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void updateDuplicate() throws Exception {
-        UserTo updatedTo = new UserTo(null, "New_First","New_Last", MANAGER_MAIL, "newPass");
+        UserTo updatedTo = new UserTo(null, "New_First", "New_Last", MANAGER_MAIL, "newPass");
         perform(MockMvcRequestBuilders.put(REST_URL).contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updatedTo)))
                 .andDo(print())

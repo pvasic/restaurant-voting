@@ -23,19 +23,21 @@ public class VoteService {
     private final RestaurantRepository restaurantRepository;
 
     @Transactional
-    public Vote update(Vote vote, Vote oldVote, int userId, int restaurantId) {
-        checkVoteDateTime(vote.getId(), vote.getDateTime(), oldVote.getDateTime().toLocalDate());
+    public Vote update(Vote vote, Vote oldVote, int userId) {
+        checkVoteDateTime(vote.id(), vote.getDateTime(), oldVote.getDateTime().toLocalDate());
         decrementVoteCount(findRestaurant(oldVote.getRestaurantId()));
-        incrementVoteCount(findRestaurant(restaurantId));
-        Vote voteUpdated = new Vote(oldVote.getId(), userId, restaurantId, vote.getDateTime());
-        return voteRepository.save(voteUpdated);
+        int voteRestaurantId = vote.getRestaurantId();
+        incrementVoteCount(findRestaurant(voteRestaurantId));
+        vote.setUserId(userId);
+        return voteRepository.save(vote);
     }
 
     @Transactional
-    public Vote save(Vote vote, int userId, int restaurantId) {
-        Optional<Vote> oOldVote = voteRepository.get(userId);
+    public Vote save(Vote vote, int userId, Integer restaurantId) {
+        Optional<Vote> oOldVote = voteRepository.findById(userId);
         if (oOldVote.isEmpty()) {
-            incrementVoteCount(findRestaurant(restaurantId));
+            Restaurant restaurant = restaurantRepository.checkByRestaurantId(restaurantId);
+            incrementVoteCount(restaurant);
             Vote createdVote = new Vote(null, userId, restaurantId, vote.getDateTime());
             return voteRepository.save(createdVote);
         } else {
@@ -45,10 +47,10 @@ public class VoteService {
     }
 
     @Transactional
-    public void delete(int id, Vote vote) {
+    public void delete(int id, Vote vote, Restaurant restaurant) {
         checkVoteDateTime(id, LocalDateTime.now(), vote.getDateTime().toLocalDate());
         voteRepository.delete(id);
-        decrementVoteCount(findRestaurant(vote.getRestaurantId()));
+        decrementVoteCount(restaurant);
     }
 
     private Restaurant findRestaurant(Integer restaurantId) {

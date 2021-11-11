@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.envers.Audited;
 import ru.pvasic.restaurantvoting.HasIdAndEmail;
 import ru.pvasic.restaurantvoting.util.validation.NoHtml;
 
@@ -19,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -28,13 +30,18 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
+
+
 @Entity
-@Table(name = "restaurants")
+@Table(name = "restaurants", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "restaurants_unique_email_unique_idx")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true, exclude = {"dishes", "user"})
 public class Restaurant extends AbstractBaseEntity implements HasIdAndEmail {
+    @Column(name = "user_id")
+    @NotNull
+    private Integer userId;
 
     @NotBlank
     @Size(min = 2, max = 100)
@@ -61,19 +68,15 @@ public class Restaurant extends AbstractBaseEntity implements HasIdAndEmail {
     @NotNull
     private LocalDateTime dateTime;
 
-    // TODO fix proxy (not passed test RestaurantControllerTest
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    @JsonBackReference
-    private User user;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
     @JsonManagedReference
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
     private List<Dish> dishes;
 
-    public Restaurant(Integer id, String name, String address, String email, int voteCount, LocalDateTime dateTime) {
+    public Restaurant(Integer id, Integer userId, String name, String address, String email, int voteCount, LocalDateTime dateTime) {
         super(id);
+        this.userId = userId;
         this.name = name;
         this.address = address;
         this.email = email;

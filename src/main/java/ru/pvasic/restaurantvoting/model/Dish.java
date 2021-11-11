@@ -28,7 +28,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true, exclude = {"restaurant"})
+@ToString(callSuper = true)
 @EntityListeners(AuditingEntityListener.class)
 @Audited
 public class Dish extends AbstractBaseEntity {
@@ -49,6 +49,7 @@ public class Dish extends AbstractBaseEntity {
     @JoinColumn(name = "restaurant_id", nullable = false)
     @JsonBackReference
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @ToString.Exclude
     private Restaurant restaurant;
 
     public Dish(Integer id, String name, int price, LocalDateTime dateTime) {
