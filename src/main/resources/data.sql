@@ -10,9 +10,9 @@ VALUES ('USER', 1),
        ('ADMIN', 3),
        ('MANAGER', 3);
 
-INSERT INTO RESTAURANTS (NAME, ADDRESS, EMAIL, VOTE_COUNT, DATE_TIME, USER_ID)
-VALUES ('Macdonalds', 'Москва', 'macdonalds@mac.com', 1, '2021-05-01 00:00:00', 2),
-       ('DoDoPizza', 'Мытищи', 'dodo@do.com', 0, '2021-05-02 03:00:00', 3);
+INSERT INTO RESTAURANTS (NAME, ADDRESS, EMAIL, DATE_TIME, USER_ID)
+VALUES ('Macdonalds', 'Москва', 'macdonalds@mac.com', '2021-05-01 00:00:00', 2),
+       ('DoDoPizza', 'Мытищи', 'dodo@do.com', '2021-05-02 03:00:00', 3);
 
 INSERT INTO DISHES (NAME, PRICE, DATE_TIME, RESTAURANT_ID)
 VALUES ('chicken', 250, '2021-05-07 09:10:00', 1),

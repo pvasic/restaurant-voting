@@ -45,7 +45,7 @@ class VoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + "user/restaurants/" + RESTAURANT1_ID + "/votes/" + VOTE_ID))
+        perform(MockMvcRequestBuilders.delete(REST_URL + "user/votes/" + VOTE_ID))
                 .andExpect(status().isNoContent());
         assertFalse(repository.get(VOTE_ID, USER_ID).isPresent());
     }
@@ -66,14 +66,13 @@ class VoteControllerTest extends AbstractControllerTest {
         repository.delete(VOTE_ID);
         assertFalse(repository.findById(VOTE_ID).isPresent());
         Vote newVote = VoteTestData.getNew();
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + "/user/restaurants/" + RESTAURANT2_ID + "/votes")
+        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + "/user/votes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newVote)));
 
         Vote created = readFromJson(action, Vote.class);
         int newId = created.id();
         newVote.setId(newId);
-        newVote.setUserId(USER_ID);
         VOTE_MATCHER.assertMatch(created, newVote);
         VOTE_MATCHER.assertMatch(repository.getById(newId), newVote);
     }

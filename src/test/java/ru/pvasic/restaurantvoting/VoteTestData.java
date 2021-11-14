@@ -22,6 +22,6 @@ public class VoteTestData {
     }
 
     public static Vote getNew() {
-        return new Vote(null, null, RESTAURANT2_ID, LocalDateTime.now());
+        return new Vote(null, USER_ID, RESTAURANT2_ID, LocalDateTime.now());
     }
 }

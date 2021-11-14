@@ -59,11 +59,6 @@ public class Restaurant extends AbstractBaseEntity implements HasIdAndEmail {
     @NoHtml   // https://stackoverflow.com/questions/17480809
     private String email;
 
-    @Column(name = "vote_count", nullable = false, columnDefinition = "int default 0")
-    @NotNull
-    @Min(0)
-    private int voteCount = 0;
-
     @Column(name = "date_time", nullable = false)
     @NotNull
     private LocalDateTime dateTime;
@@ -74,13 +69,12 @@ public class Restaurant extends AbstractBaseEntity implements HasIdAndEmail {
     @ToString.Exclude
     private List<Dish> dishes;
 
-    public Restaurant(Integer id, Integer userId, String name, String address, String email, int voteCount, LocalDateTime dateTime) {
+    public Restaurant(Integer id, Integer userId, String name, String address, String email, LocalDateTime dateTime) {
         super(id);
         this.userId = userId;
         this.name = name;
         this.address = address;
         this.email = email;
-        this.voteCount = voteCount;
         this.dateTime = dateTime;
     }
 }
