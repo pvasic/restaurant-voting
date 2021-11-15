@@ -8,6 +8,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.envers.Audited;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.util.CollectionUtils;
 import ru.pvasic.restaurantvoting.HasIdAndEmail;
 import ru.pvasic.restaurantvoting.util.validation.NoHtml;
@@ -16,6 +18,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -39,6 +42,8 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true)
+@EntityListeners(AuditingEntityListener.class)
+@Audited
 public class User extends AbstractBaseEntity implements HasIdAndEmail, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
