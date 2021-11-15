@@ -10,6 +10,7 @@ import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 import ru.pvasic.restaurantvoting.HasIdAndEmail;
 import ru.pvasic.restaurantvoting.util.validation.NoHtml;
 
@@ -67,6 +68,7 @@ public class Restaurant extends AbstractBaseEntity implements HasIdAndEmail {
     @JsonManagedReference
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     private List<Dish> dishes;
 
     public Restaurant(Integer id, Integer userId, String name, String address, String email, LocalDateTime dateTime) {

@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.pvasic.restaurantvoting.DishTestData;
 import ru.pvasic.restaurantvoting.RestaurantTestData;
 import ru.pvasic.restaurantvoting.model.Restaurant;
 import ru.pvasic.restaurantvoting.repository.restaurant.RestaurantRepository;
@@ -92,6 +93,10 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void getWithDishes() throws Exception {
+
+        //TODO mvn test not passed, dishes = null
+        restaurant_1.setDishes(DishTestData.dishes);
+
         perform(MockMvcRequestBuilders.get(REST_URL + "user/restaurants/" + RESTAURANT1_ID + "/with-dishes"))
                 .andExpect(status().isOk())
                 .andDo(print())

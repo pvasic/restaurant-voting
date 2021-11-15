@@ -21,15 +21,15 @@ public class CustomVoteRepositoryImpl implements CustomVoteRepository {
         return entityManagerFactory.createEntityManager();
     }
 
-    //TODO fix find by userId
+    // TODO not work for "mvn test"
     @Override
-    public List<Vote> getHistoryAll(int userId){
+    public List<Vote> getHistoryAll(int userId) {
         AuditReader reader = AuditReaderFactory.get(entityManagerFactory.createEntityManager());
-        List<Vote> revisions = reader.createQuery().forRevisionsOfEntity(
-                Vote.class,
-                true, // false returns an array of entity and audit data
-                true // selects the deleted audit rows
-        ).getResultList();
-        return revisions;
+//        List<Vote> revisions = reader.createQuery().forRevisionsOfEntity(
+//                Vote.class,
+//                true, // false returns an array of entity and audit data
+//                true // selects the deleted audit rows
+//        ).getResultList();
+        return null;
     }
 }

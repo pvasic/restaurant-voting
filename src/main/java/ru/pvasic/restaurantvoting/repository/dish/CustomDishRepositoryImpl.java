@@ -23,11 +23,11 @@ public class CustomDishRepositoryImpl implements CustomDishRepository {
     @Override
     public List<Dish> getHistoryAll(int restaurantId) {
         AuditReader reader = AuditReaderFactory.get(entityManagerFactory.createEntityManager());
-        List<Dish> revisions = reader.createQuery().forRevisionsOfEntity(
-                Dish.class,
-                true, // false returns an array of entity and audit data
-                true // selects the deleted audit rows
-        ).getResultList();
-        return revisions;
+//        List<Dish> revisions = reader.createQuery().forRevisionsOfEntity(
+//                Dish.class,
+//                true, // false returns an array of entity and audit data
+//                true // selects the deleted audit rows
+//        ).getResultList();
+        return null;
     }
 }

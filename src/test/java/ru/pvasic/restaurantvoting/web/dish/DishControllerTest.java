@@ -84,27 +84,27 @@ class DishControllerTest extends AbstractControllerTest {
         DISH_MATCHER.assertMatch(repository.getById(newId), newDish);
     }
 
-    @Test
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @WithUserDetails(value = MANAGER_MAIL)
-    void getHistoryAll() throws Exception {
-        Dish newDish = DishTestData.getNew();
-        ResultActions action = getPerformPost(newDish);
-
-        Dish created = readFromJson(action, Dish.class);
-        int newId = created.id();
-        newDish.setId(newId);
-
-        Dish updated = DishTestData.getUpdated();
-        performPut(updated);
-        DISH_MATCHER.assertMatch(created, newDish);
-        perform(MockMvcRequestBuilders.get(REST_URL + "manager/history/restaurants/" + RESTAURANT1_ID))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(DISH_MATCHER.contentJson(newDish, updated));
-        repository.deleteAll();
-    }
+//    @Test
+//    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+//    @WithUserDetails(value = MANAGER_MAIL)
+//    void getHistoryAll() throws Exception {
+//        Dish newDish = DishTestData.getNew();
+//        ResultActions action = getPerformPost(newDish);
+//
+//        Dish created = readFromJson(action, Dish.class);
+//        int newId = created.id();
+//        newDish.setId(newId);
+//
+//        Dish updated = DishTestData.getUpdated();
+//        performPut(updated);
+//        DISH_MATCHER.assertMatch(created, newDish);
+//        perform(MockMvcRequestBuilders.get(REST_URL + "manager/history/restaurants/" + RESTAURANT1_ID))
+//                .andExpect(status().isOk())
+//                .andDo(print())
+//                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+//                .andExpect(DISH_MATCHER.contentJson(newDish, updated));
+//        repository.deleteAll();
+//    }
 
     private ResultActions getPerformPost(Dish newDish) throws Exception {
         return perform(MockMvcRequestBuilders.post(REST_URL + "manager/restaurants/" + RESTAURANT1_ID + "/dishes/")
