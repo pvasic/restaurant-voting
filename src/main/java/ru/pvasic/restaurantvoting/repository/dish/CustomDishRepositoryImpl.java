@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
-public class CustomDishRepositoryImpl implements CustomDishRepository{
+public class CustomDishRepositoryImpl implements CustomDishRepository {
 
     @Autowired
     EntityManagerFactory entityManagerFactory;
@@ -19,8 +19,9 @@ public class CustomDishRepositoryImpl implements CustomDishRepository{
         return entityManagerFactory.createEntityManager();
     }
 
+    // TODO not work for "mvn test"
     @Override
-    public List<Dish> getHistoryAll(int restaurantId){
+    public List<Dish> getHistoryAll(int restaurantId) {
         AuditReader reader = AuditReaderFactory.get(entityManagerFactory.createEntityManager());
         List<Dish> revisions = reader.createQuery().forRevisionsOfEntity(
                 Dish.class,

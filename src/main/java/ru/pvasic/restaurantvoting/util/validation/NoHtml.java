@@ -11,7 +11,7 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Documented
-@Constraint(validatedBy = ru.pvasic.restaurantvoting.util.validation.NoHtmlValidator.class)
+@Constraint(validatedBy = NoHtmlValidator.class)
 @Target({METHOD, FIELD})
 @Retention(RUNTIME)
 public @interface NoHtml {
