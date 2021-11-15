@@ -8,7 +8,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.pvasic.restaurantvoting.error.NotFoundException;
 import ru.pvasic.restaurantvoting.model.Role;
 import ru.pvasic.restaurantvoting.model.User;
 import ru.pvasic.restaurantvoting.repository.UserRepository;
@@ -17,16 +16,15 @@ import ru.pvasic.restaurantvoting.web.error.GlobalExceptionHandler;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.pvasic.restaurantvoting.TestUtil.readFromJson;
 import static ru.pvasic.restaurantvoting.UserTestData.*;
 
-class AdminRestControllerTest extends AbstractControllerTest {
+class AdminControllerTest extends AbstractControllerTest {
 
-    private static final String REST_URL = AdminRestController.REST_URL + '/';
+    private static final String REST_URL = AdminController.REST_URL + '/';
 
     @Autowired
     private UserRepository userRepository;

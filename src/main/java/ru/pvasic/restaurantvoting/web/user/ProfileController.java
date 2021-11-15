@@ -1,7 +1,6 @@
 package ru.pvasic.restaurantvoting.web.user;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,9 +28,9 @@ import java.net.URI;
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew;
 
 @RestController
-@RequestMapping(value = ProfileRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = ProfileController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
-public class ProfileRestController extends AbstractUserController {
+public class ProfileController extends AbstractUserController {
     static final String REST_URL = "/api/profile";
 
     @GetMapping

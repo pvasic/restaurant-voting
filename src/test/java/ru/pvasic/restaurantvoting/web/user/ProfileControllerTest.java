@@ -20,9 +20,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.pvasic.restaurantvoting.TestUtil.readFromJson;
 import static ru.pvasic.restaurantvoting.UserTestData.*;
-import static ru.pvasic.restaurantvoting.web.user.ProfileRestController.REST_URL;
+import static ru.pvasic.restaurantvoting.web.user.ProfileController.REST_URL;
 
-class ProfileRestControllerTest extends AbstractControllerTest {
+class ProfileControllerTest extends AbstractControllerTest {
 
     @Autowired
     private UserRepository userRepository;

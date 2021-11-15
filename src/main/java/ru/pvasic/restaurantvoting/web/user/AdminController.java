@@ -28,9 +28,9 @@ import java.util.List;
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew;
 
 @RestController
-@RequestMapping(value = AdminRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = AdminController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
-public class AdminRestController extends AbstractUserController {
+public class AdminController extends AbstractUserController {
 
     static final String REST_URL = "/api/admin/users";
 
