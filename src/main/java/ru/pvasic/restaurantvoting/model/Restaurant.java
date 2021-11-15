@@ -37,7 +37,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Audited
-public class Restaurant extends AbstractBaseEntity implements HasIdAndEmail {
+public class Restaurant extends BaseEntity implements HasIdAndEmail {
     @Column(name = "user_id")
     @NotNull
     private Integer userId;

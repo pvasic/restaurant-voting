@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Audited
-public class Vote extends AbstractBaseEntity implements Persistable<Integer>, HasId {
+public class Vote extends BaseEntity implements Persistable<Integer>, HasId {
 
     @Column(name = "restaurant_id", nullable = false)
     @NotNull

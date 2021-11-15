@@ -28,7 +28,7 @@ public class UserTestData {
 
     public static User getUpdated() {
         User updated = new User(user);
-        updated.setFirstName("UpdatedFirst");
+        updated.setName("UpdatedFirst");
         updated.setLastName("UpdatedLast");
         updated.setPassword("updatedPassword");
         updated.setEnabled(false);

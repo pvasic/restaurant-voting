@@ -1,4 +1,4 @@
-INSERT INTO USERS (EMAIL, FIRST_NAME, LAST_NAME, PASSWORD)
+INSERT INTO USERS (EMAIL, NAME, LAST_NAME, PASSWORD)
 VALUES ('user@gmail.com', 'User_First', 'User_Last', '{noop}userPassword'),
        ('manager@gmail.com', 'Manager_First', 'Manager_Last', '{noop}managerPassword'),
        ('admin@gmail.com', 'Admin_First', 'Admin_Last', '{noop}adminPassword');

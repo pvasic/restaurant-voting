@@ -14,15 +14,11 @@ public class UserUtil {
     public static final PasswordEncoder PASSWORD_ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
     public static User createNewFromTo(UserTo userTo) {
-        return new User(null, userTo.getFirstName(), userTo.getLastName(), userTo.getEmail().toLowerCase(), userTo.getPassword(), Role.USER);
-    }
-
-    public static UserTo asTo(User user) {
-        return new UserTo(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword());
+        return new User(null, userTo.getName(), userTo.getLastName(), userTo.getEmail().toLowerCase(), userTo.getPassword(), Role.USER);
     }
 
     public static User updateFromTo(User user, UserTo userTo) {
-        user.setFirstName(userTo.getFirstName());
+        user.setName(userTo.getName());
         user.setLastName(userTo.getLastName());
         user.setEmail(userTo.getEmail().toLowerCase());
         user.setPassword(userTo.getPassword());

@@ -11,4 +11,9 @@ import ru.pvasic.restaurantvoting.HasId;
 @Data
 public abstract class BaseTo implements HasId {
     protected Integer id;
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + ":" + id;
+    }
 }

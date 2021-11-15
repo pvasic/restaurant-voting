@@ -31,7 +31,7 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 @EntityListeners(AuditingEntityListener.class)
 @Audited
-public class Dish extends AbstractBaseEntity {
+public class Dish extends BaseEntity {
 
     @NotBlank
     @Size(min = 2, max = 100)

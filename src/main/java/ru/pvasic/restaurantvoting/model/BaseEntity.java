@@ -26,8 +26,7 @@ import javax.persistence.MappedSuperclass;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString
-public abstract class AbstractBaseEntity implements Persistable<Integer>, HasId {
+public abstract class BaseEntity implements Persistable<Integer>, HasId {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,12 +52,19 @@ public abstract class AbstractBaseEntity implements Persistable<Integer>, HasId 
         if (o == null || !getClass().equals(ProxyUtils.getUserClass(o))) {
             return false;
         }
-        AbstractBaseEntity that = (AbstractBaseEntity) o;
+        BaseEntity that = (BaseEntity) o;
         return id != null && id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
         return id == null ? 0 : id;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{" +
+                "id=" + id +
+                '}';
     }
 }

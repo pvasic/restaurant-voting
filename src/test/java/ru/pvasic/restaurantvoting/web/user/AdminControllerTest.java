@@ -153,7 +153,7 @@ class AdminControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void updateInvalid() throws Exception {
         User invalid = new User(user);
-        invalid.setFirstName("");
+        invalid.setName("");
         perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(invalid, "password")))
@@ -165,7 +165,7 @@ class AdminControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void updateHtmlUnsafe() throws Exception {
         User updated = new User(user);
-        updated.setFirstName("<script>alert(123)</script>");
+        updated.setName("<script>alert(123)</script>");
         perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(updated, "password")))
