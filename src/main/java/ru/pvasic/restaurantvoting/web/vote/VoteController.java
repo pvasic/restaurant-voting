@@ -65,7 +65,6 @@ public class VoteController {
         service.update(vote, voteOld);
     }
 
-    // TODO add parameter instead resource restaurants
     @PostMapping(value = "/user/votes", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Vote> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestBody Vote vote) {
         int userId = authUser.id();
