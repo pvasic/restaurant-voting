@@ -17,7 +17,6 @@ import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkVot
 @AllArgsConstructor
 public class VoteService {
     private final VoteRepository voteRepository;
-    private final RestaurantRepository restaurantRepository;
 
     @Transactional
     public Vote update(Vote vote, Vote oldVote) {

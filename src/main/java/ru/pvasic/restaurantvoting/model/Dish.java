@@ -1,21 +1,16 @@
 package ru.pvasic.restaurantvoting.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.envers.Audited;
-import org.hibernate.envers.RelationTargetAuditMode;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
@@ -45,17 +40,14 @@ public class Dish extends BaseEntity {
     @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false)
-    @JsonBackReference
-    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-    @ToString.Exclude
-    private Restaurant restaurant;
+    @Column(name = "restaurant_id", nullable = false)
+    private Integer restaurantId;
 
-    public Dish(Integer id, String name, int price, LocalDateTime dateTime) {
+    public Dish(Integer id, String name, int price, LocalDateTime dateTime, Integer restaurantId) {
         super(id);
         this.name = name;
         this.price = price;
         this.dateTime = dateTime;
+        this.restaurantId = restaurantId;
     }
 }

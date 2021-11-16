@@ -23,7 +23,7 @@ import static ru.pvasic.restaurantvoting.UserTestData.MANAGER_MAIL;
 
 class ManagerDishControllerTest extends AbstractControllerTest {
 
-    private final static String REST_URL = ManagerDishController.REST_URL + "/";
+    private final static String REST_URL = "/api/manager/restaurants/" + RESTAURANT1_ID + "/";
 
     @Autowired
     private DishRepository repository;
@@ -31,7 +31,7 @@ class ManagerDishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = MANAGER_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + "restaurants/" + RESTAURANT1_ID + "/dishes/" + DISH1_ID))
+        perform(MockMvcRequestBuilders.delete(REST_URL + "dishes/" + DISH1_ID))
                 .andExpect(status().isNoContent());
         assertFalse(repository.get(DISH1_ID, MANAGER_ID).isPresent());
     }
@@ -80,7 +80,7 @@ class ManagerDishControllerTest extends AbstractControllerTest {
 //    }
 
     private ResultActions getPerformPost(Dish newDish) throws Exception {
-        return perform(MockMvcRequestBuilders.post(REST_URL + "restaurants/" + RESTAURANT1_ID + "/dishes/")
+        return perform(MockMvcRequestBuilders.post(REST_URL + "dishes/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newDish)));
     }
