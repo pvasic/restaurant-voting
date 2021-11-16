@@ -1,5 +1,6 @@
-package ru.pvasic.restaurantvoting;
+package ru.pvasic.restaurantvoting.web.user;
 
+import ru.pvasic.restaurantvoting.MatcherFactory;
 import ru.pvasic.restaurantvoting.model.Role;
 import ru.pvasic.restaurantvoting.model.User;
 import ru.pvasic.restaurantvoting.util.JsonUtil;
@@ -7,8 +8,9 @@ import ru.pvasic.restaurantvoting.util.JsonUtil;
 import java.util.Collections;
 import java.util.Date;
 
+
 public class UserTestData {
-    public static final ru.pvasic.restaurantvoting.TestMatcher<User> USER_MATCHER = ru.pvasic.restaurantvoting.TestMatcher.usingIgnoringFieldsComparator(User.class, "registered", "password", "restaurant");
+    public static final MatcherFactory.Matcher<User> MATCHER = MatcherFactory.usingIgnoringFieldsComparator(User.class, "registered", "password", "restaurant");
 
     public static final int USER_ID = 1;
     public static final int MANAGER_ID = 2;

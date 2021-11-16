@@ -4,18 +4,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.pvasic.restaurantvoting.DishTestData;
+import ru.pvasic.restaurantvoting.web.dish.DishTestData;
 import ru.pvasic.restaurantvoting.web.AbstractControllerTest;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT1_ID;
-import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANTS;
-import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT_MATCHER;
-import static ru.pvasic.restaurantvoting.RestaurantTestData.WITH_DISHES_MATCHER;
-import static ru.pvasic.restaurantvoting.RestaurantTestData.restaurant_1;
-import static ru.pvasic.restaurantvoting.UserTestData.USER_MAIL;
+import static ru.pvasic.restaurantvoting.web.restaurant.RestaurantTestData.RESTAURANT1_ID;
+import static ru.pvasic.restaurantvoting.web.restaurant.RestaurantTestData.RESTAURANTS;
+import static ru.pvasic.restaurantvoting.web.restaurant.RestaurantTestData.MATCHER;
+import static ru.pvasic.restaurantvoting.web.restaurant.RestaurantTestData.WITH_DISHES_MATCHER;
+import static ru.pvasic.restaurantvoting.web.restaurant.RestaurantTestData.restaurant_1;
+import static ru.pvasic.restaurantvoting.web.user.UserTestData.USER_MAIL;
 
 class RestaurantControllerTest extends AbstractControllerTest {
 
@@ -28,7 +28,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER.contentJson(restaurant_1));
+                .andExpect(MATCHER.contentJson(restaurant_1));
     }
 
     @Test
@@ -38,7 +38,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(RESTAURANT_MATCHER.contentJson(RESTAURANTS));
+                .andExpect(MATCHER.contentJson(RESTAURANTS));
     }
 
     // TODO add test

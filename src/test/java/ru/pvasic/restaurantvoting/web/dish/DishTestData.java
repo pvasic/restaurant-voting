@@ -1,5 +1,6 @@
-package ru.pvasic.restaurantvoting;
+package ru.pvasic.restaurantvoting.web.dish;
 
+import ru.pvasic.restaurantvoting.MatcherFactory;
 import ru.pvasic.restaurantvoting.model.Dish;
 
 import java.time.LocalDateTime;
@@ -8,7 +9,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class DishTestData {
-    public static final ru.pvasic.restaurantvoting.TestMatcher<Dish> DISH_MATCHER = ru.pvasic.restaurantvoting.TestMatcher.usingIgnoringFieldsComparator(Dish.class, "restaurant");
+    public static final MatcherFactory.Matcher<Dish> MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Dish.class, "restaurant");
 
     public static final int DISH1_ID = 1;
     public static final int DISH2_ID = 2;

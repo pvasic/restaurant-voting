@@ -6,7 +6,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.pvasic.restaurantvoting.VoteTestData;
 import ru.pvasic.restaurantvoting.model.Vote;
 import ru.pvasic.restaurantvoting.repository.vote.VoteRepository;
 import ru.pvasic.restaurantvoting.util.JsonUtil;
@@ -16,14 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT1_ID;
-import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT2_ID;
-import static ru.pvasic.restaurantvoting.TestUtil.readFromJson;
-import static ru.pvasic.restaurantvoting.UserTestData.USER_ID;
-import static ru.pvasic.restaurantvoting.UserTestData.USER_MAIL;
-import static ru.pvasic.restaurantvoting.VoteTestData.VOTE_ID;
-import static ru.pvasic.restaurantvoting.VoteTestData.VOTE_MATCHER;
-import static ru.pvasic.restaurantvoting.VoteTestData.vote;
+import static ru.pvasic.restaurantvoting.web.user.UserTestData.USER_ID;
+import static ru.pvasic.restaurantvoting.web.user.UserTestData.USER_MAIL;
+import static ru.pvasic.restaurantvoting.web.vote.VoteTestData.VOTE_ID;
+import static ru.pvasic.restaurantvoting.web.vote.VoteTestData.MATCHER;
+import static ru.pvasic.restaurantvoting.web.vote.VoteTestData.vote;
 
 class VoteControllerTest extends AbstractControllerTest {
 
@@ -39,7 +35,7 @@ class VoteControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(VOTE_MATCHER.contentJson(vote));
+                .andExpect(MATCHER.contentJson(vote));
     }
 
     @Test
@@ -57,7 +53,7 @@ class VoteControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.put(REST_URL + "user/votes/" + VOTE_ID)
                 .contentType(MediaType.APPLICATION_JSON).content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
-        VOTE_MATCHER.assertMatch(repository.getById(VOTE_ID), updated);
+        MATCHER.assertMatch(repository.getById(VOTE_ID), updated);
     }
 
     @Test
@@ -70,10 +66,10 @@ class VoteControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newVote)));
 
-        Vote created = readFromJson(action, Vote.class);
+        Vote created = MATCHER.readFromJson(action);
         int newId = created.id();
         newVote.setId(newId);
-        VOTE_MATCHER.assertMatch(created, newVote);
-        VOTE_MATCHER.assertMatch(repository.getById(newId), newVote);
+        MATCHER.assertMatch(created, newVote);
+        MATCHER.assertMatch(repository.getById(newId), newVote);
     }
 }

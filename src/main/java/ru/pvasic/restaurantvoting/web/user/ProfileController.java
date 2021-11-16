@@ -1,13 +1,12 @@
 package ru.pvasic.restaurantvoting.web.user;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,17 +24,18 @@ import ru.pvasic.restaurantvoting.util.UserUtil;
 import javax.validation.Valid;
 import java.net.URI;
 
-import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew;
+import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.*;
+
 
 @RestController
-@RequestMapping(value = ProfileController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = ProfileController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 public class ProfileController extends AbstractUserController {
-    static final String REST_URL = "/api/profile";
+    static final String URL = "/api/profile";
 
     @GetMapping
-    public HttpEntity<User> get(@AuthenticationPrincipal AuthUser authUser) {
-        return super.get(authUser.id());
+    public User get(@AuthenticationPrincipal AuthUser authUser) {
+        return authUser.getUser();
     }
 
     @DeleteMapping
@@ -51,16 +51,16 @@ public class ProfileController extends AbstractUserController {
         checkNew(userTo);
         User created = prepareAndSave(UserUtil.createNewFromTo(userTo));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL).build().toUri();
+                .path(URL).build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void update(@RequestBody UserTo userTo, @AuthenticationPrincipal AuthUser authUser) throws BindException {
-        validateBeforeUpdate(userTo, authUser.id());
-        User user = repository.getById(userTo.id());
+    public void update(@RequestBody @Valid UserTo userTo, @AuthenticationPrincipal AuthUser authUser) {
+        assureIdConsistent(userTo, authUser.id());
+        User user = authUser.getUser();
         prepareAndSave(UserUtil.updateFromTo(user, userTo));
     }
 }

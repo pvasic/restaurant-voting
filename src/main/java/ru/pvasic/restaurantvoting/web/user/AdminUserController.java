@@ -1,12 +1,12 @@
 package ru.pvasic.restaurantvoting.web.user;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,14 +25,14 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
-import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew;
+import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.*;
 
 @RestController
-@RequestMapping(value = AdminController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = AdminUserController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
-public class AdminController extends AbstractUserController {
+public class AdminUserController extends AbstractUserController {
 
-    static final String REST_URL = "/api/admin/users";
+    static final String URL = "/api/admin/users";
 
     @Override
     @GetMapping("/{id}")
@@ -50,7 +50,7 @@ public class AdminController extends AbstractUserController {
     @GetMapping
     public List<User> getAll() {
         log.info("getAll");
-        return repository.findAll(Sort.by(Sort.Direction.ASC, "lastName", "email"));
+        return repository.findAll(Sort.by(Sort.Direction.ASC, "name", "email"));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -59,20 +59,20 @@ public class AdminController extends AbstractUserController {
         checkNew(user);
         User created = prepareAndSave(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/{id}")
+                .path(URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody User user, @PathVariable int id) throws BindException {
-        validateBeforeUpdate(user, id);
+    public void update(@Valid @RequestBody User user, @PathVariable int id) {
         log.info("update {} with id={}", user, id);
+        assureIdConsistent(user, id);
         prepareAndSave(user);
     }
 
-    @GetMapping("/by")
+    @GetMapping("/by-email")
     public ResponseEntity<User> getByEmail(@RequestParam String email) {
         log.info("getByEmail {}", email);
         return ResponseEntity.of(repository.getByEmail(email));

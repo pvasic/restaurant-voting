@@ -12,12 +12,12 @@ import ru.pvasic.restaurantvoting.web.AbstractControllerTest;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.pvasic.restaurantvoting.DishTestData.DISH1_ID;
-import static ru.pvasic.restaurantvoting.DishTestData.DISH_1;
-import static ru.pvasic.restaurantvoting.DishTestData.DISH_MATCHER;
-import static ru.pvasic.restaurantvoting.DishTestData.dishes;
-import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT1_ID;
-import static ru.pvasic.restaurantvoting.UserTestData.USER_MAIL;
+import static ru.pvasic.restaurantvoting.web.dish.DishTestData.DISH1_ID;
+import static ru.pvasic.restaurantvoting.web.dish.DishTestData.DISH_1;
+import static ru.pvasic.restaurantvoting.web.dish.DishTestData.MATCHER;
+import static ru.pvasic.restaurantvoting.web.dish.DishTestData.dishes;
+import static ru.pvasic.restaurantvoting.web.restaurant.RestaurantTestData.RESTAURANT1_ID;
+import static ru.pvasic.restaurantvoting.web.user.UserTestData.USER_MAIL;
 
 class DishControllerTest extends AbstractControllerTest {
 
@@ -30,7 +30,7 @@ class DishControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(DISH_MATCHER.contentJson(DISH_1));
+                .andExpect(MATCHER.contentJson(DISH_1));
     }
 
     @Test
@@ -40,7 +40,7 @@ class DishControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(DISH_MATCHER.contentJson(dishes));
+                .andExpect(MATCHER.contentJson(dishes));
     }
 // TODO mvn test not passed, fix CustomDishRepositoryImpl
 //    @Test

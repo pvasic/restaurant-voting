@@ -6,7 +6,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.pvasic.restaurantvoting.RestaurantTestData;
 import ru.pvasic.restaurantvoting.model.Restaurant;
 import ru.pvasic.restaurantvoting.repository.restaurant.RestaurantRepository;
 import ru.pvasic.restaurantvoting.util.JsonUtil;
@@ -14,12 +13,11 @@ import ru.pvasic.restaurantvoting.web.AbstractControllerTest;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT1_ID;
-import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT_MATCHER;
-import static ru.pvasic.restaurantvoting.TestUtil.readFromJson;
-import static ru.pvasic.restaurantvoting.UserTestData.ADMIN_MAIL;
-import static ru.pvasic.restaurantvoting.UserTestData.MANAGER_ID;
-import static ru.pvasic.restaurantvoting.UserTestData.MANAGER_MAIL;
+import static ru.pvasic.restaurantvoting.web.restaurant.RestaurantTestData.RESTAURANT1_ID;
+import static ru.pvasic.restaurantvoting.web.restaurant.RestaurantTestData.MATCHER;
+import static ru.pvasic.restaurantvoting.web.user.UserTestData.ADMIN_MAIL;
+import static ru.pvasic.restaurantvoting.web.user.UserTestData.MANAGER_ID;
+import static ru.pvasic.restaurantvoting.web.user.UserTestData.MANAGER_MAIL;
 
 class ManagerRestaurantControllerTest extends AbstractControllerTest {
 
@@ -44,7 +42,7 @@ class ManagerRestaurantControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON).content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
 
-        RESTAURANT_MATCHER.assertMatch(repository.getById(RESTAURANT1_ID), updated);
+        MATCHER.assertMatch(repository.getById(RESTAURANT1_ID), updated);
     }
 
     @Test
@@ -55,10 +53,10 @@ class ManagerRestaurantControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newRestaurant)));
 
-        Restaurant created = readFromJson(action, Restaurant.class);
+        Restaurant created = MATCHER.readFromJson(action);
         int newId = created.id();
         newRestaurant.setId(newId);
-        RESTAURANT_MATCHER.assertMatch(created, newRestaurant);
-        RESTAURANT_MATCHER.assertMatch(repository.getById(newId), newRestaurant);
+        MATCHER.assertMatch(created, newRestaurant);
+        MATCHER.assertMatch(repository.getById(newId), newRestaurant);
     }
 }

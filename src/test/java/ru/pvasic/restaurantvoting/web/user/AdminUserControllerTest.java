@@ -19,12 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.pvasic.restaurantvoting.TestUtil.readFromJson;
-import static ru.pvasic.restaurantvoting.UserTestData.*;
+import static ru.pvasic.restaurantvoting.web.user.UserTestData.*;
 
-class AdminControllerTest extends AbstractControllerTest {
+class AdminUserControllerTest extends AbstractControllerTest {
 
-    private static final String REST_URL = AdminController.REST_URL + '/';
+    private static final String REST_URL = AdminUserController.URL + '/';
 
     @Autowired
     private UserRepository userRepository;
@@ -37,7 +36,7 @@ class AdminControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 // https://jira.spring.io/browse/SPR-14472
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.contentJson(admin));
+                .andExpect(MATCHER.contentJson(admin));
     }
 
     @Test
@@ -51,10 +50,10 @@ class AdminControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void getByEmail() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "by?email=" + admin.getEmail()))
+        perform(MockMvcRequestBuilders.get(REST_URL + "by-email?email=" + admin.getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.contentJson(admin));
+                .andExpect(MATCHER.contentJson(admin));
     }
 
     @Test
@@ -70,6 +69,16 @@ class AdminControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void deleteNotFound() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + NOT_FOUND))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @WithUserDetails(value = ADMIN_MAIL)
+    void enableNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.patch(REST_URL + NOT_FOUND)
+                .param("enabled", "false")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
@@ -98,7 +107,7 @@ class AdminControllerTest extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        USER_MATCHER.assertMatch(userRepository.getById(USER_ID), getUpdated());
+        MATCHER.assertMatch(userRepository.getById(USER_ID), getUpdated());
     }
 
     @Test
@@ -110,11 +119,11 @@ class AdminControllerTest extends AbstractControllerTest {
                 .content(jsonWithPassword(newUser, "newPassword")))
                 .andExpect(status().isCreated());
 
-        User created = readFromJson(action, User.class);
+        User created = MATCHER.readFromJson(action);
         int newId = created.id();
         newUser.setId(newId);
-        USER_MATCHER.assertMatch(created, newUser);
-        USER_MATCHER.assertMatch(userRepository.getById(newId), newUser);
+        MATCHER.assertMatch(created, newUser);
+        MATCHER.assertMatch(userRepository.getById(newId), newUser);
     }
 
     @Test
@@ -123,7 +132,7 @@ class AdminControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(USER_MATCHER.contentJson(admin, manager, user));
+                .andExpect(MATCHER.contentJson(admin, manager, user));
     }
 
     @Test

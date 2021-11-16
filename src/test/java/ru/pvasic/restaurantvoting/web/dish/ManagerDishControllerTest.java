@@ -6,7 +6,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.pvasic.restaurantvoting.DishTestData;
 import ru.pvasic.restaurantvoting.model.Dish;
 import ru.pvasic.restaurantvoting.repository.dish.DishRepository;
 import ru.pvasic.restaurantvoting.util.JsonUtil;
@@ -14,12 +13,12 @@ import ru.pvasic.restaurantvoting.web.AbstractControllerTest;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.pvasic.restaurantvoting.DishTestData.DISH1_ID;
-import static ru.pvasic.restaurantvoting.DishTestData.DISH_MATCHER;
-import static ru.pvasic.restaurantvoting.RestaurantTestData.RESTAURANT1_ID;
-import static ru.pvasic.restaurantvoting.TestUtil.readFromJson;
-import static ru.pvasic.restaurantvoting.UserTestData.MANAGER_ID;
-import static ru.pvasic.restaurantvoting.UserTestData.MANAGER_MAIL;
+import static ru.pvasic.restaurantvoting.web.dish.DishTestData.DISH1_ID;
+import static ru.pvasic.restaurantvoting.web.dish.DishTestData.MATCHER;
+import static ru.pvasic.restaurantvoting.web.restaurant.RestaurantTestData.RESTAURANT1_ID;
+import static ru.pvasic.restaurantvoting.web.user.UserTestData.MANAGER_ID;
+import static ru.pvasic.restaurantvoting.web.user.UserTestData.MANAGER_MAIL;
+
 
 class ManagerDishControllerTest extends AbstractControllerTest {
 
@@ -41,7 +40,7 @@ class ManagerDishControllerTest extends AbstractControllerTest {
     void update() throws Exception {
         Dish updated = DishTestData.getUpdated();
         performPut(updated);
-        DISH_MATCHER.assertMatch(repository.getById(DISH1_ID), updated);
+        MATCHER.assertMatch(repository.getById(DISH1_ID), updated);
     }
 
     @Test
@@ -50,11 +49,11 @@ class ManagerDishControllerTest extends AbstractControllerTest {
         Dish newDish = DishTestData.getNew();
         ResultActions action = getPerformPost(newDish);
 
-        Dish created = readFromJson(action, Dish.class);
+        Dish created = DishTestData.MATCHER.readFromJson(action);
         int newId = created.id();
         newDish.setId(newId);
-        DISH_MATCHER.assertMatch(created, newDish);
-        DISH_MATCHER.assertMatch(repository.getById(newId), newDish);
+        MATCHER.assertMatch(created, newDish);
+        MATCHER.assertMatch(repository.getById(newId), newDish);
     }
 
 //    @Test
