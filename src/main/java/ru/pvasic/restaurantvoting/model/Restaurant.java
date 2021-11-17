@@ -65,7 +65,7 @@ public class Restaurant extends BaseEntity implements HasIdAndEmail {
     private Date created = new Date();
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id")
+    @JoinColumn(name = "restaurant_id", insertable = false, updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)

@@ -40,7 +40,7 @@ public class Dish extends BaseEntity {
     @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
 
-    @Column(name = "restaurant_id", nullable = false)
+    @Column(name = "restaurant_id")
     private Integer restaurantId;
 
     public Dish(Integer id, String name, int price, LocalDateTime dateTime, Integer restaurantId) {
