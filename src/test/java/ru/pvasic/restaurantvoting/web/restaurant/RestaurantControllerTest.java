@@ -41,7 +41,6 @@ class RestaurantControllerTest extends AbstractControllerTest {
                 .andExpect(MATCHER.contentJson(RESTAURANTS));
     }
 
-    // TODO add test
     @Test
     @WithUserDetails(value = USER_MAIL)
     void getWithDishes() throws Exception {
