@@ -19,12 +19,12 @@ import static ru.pvasic.restaurantvoting.web.user.UserTestData.USER_MAIL;
 
 class RestaurantControllerTest extends AbstractControllerTest {
 
-    private final static String REST_URL = RestaurantController.REST_URL + "/";
+    private final static String URL = RestaurantController.URL + "/";
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "user/restaurants/" + RESTAURANT1_ID))
+        perform(MockMvcRequestBuilders.get(URL + RESTAURANT1_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -34,7 +34,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void getAll() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "user/restaurants"))
+        perform(MockMvcRequestBuilders.get(URL))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -49,7 +49,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
         //TODO mvn test not passed, dishes = null
         restaurant_1.setDishes(DishTestData.dishes);
 
-        perform(MockMvcRequestBuilders.get(REST_URL + "user/restaurants/" + RESTAURANT1_ID + "/with-dishes"))
+        perform(MockMvcRequestBuilders.get(URL + RESTAURANT1_ID + "/with-dishes"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

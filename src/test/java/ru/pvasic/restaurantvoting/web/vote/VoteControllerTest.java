@@ -23,7 +23,7 @@ import static ru.pvasic.restaurantvoting.web.vote.VoteTestData.vote;
 
 class VoteControllerTest extends AbstractControllerTest {
 
-    private final static String REST_URL = VoteController.REST_URL + "/";
+    private final static String URL = VoteController.URL + "/";
 
     @Autowired
     VoteRepository repository;
@@ -31,7 +31,7 @@ class VoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + "user/votes/" + VOTE_ID))
+        perform(MockMvcRequestBuilders.get(URL + VOTE_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -41,7 +41,7 @@ class VoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + "user/votes/" + VOTE_ID))
+        perform(MockMvcRequestBuilders.delete(URL + VOTE_ID))
                 .andExpect(status().isNoContent());
         assertFalse(repository.get(VOTE_ID, USER_ID).isPresent());
     }
@@ -50,7 +50,7 @@ class VoteControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = USER_MAIL)
     void update() throws Exception {
         Vote updated = VoteTestData.getUpdated();
-        perform(MockMvcRequestBuilders.put(REST_URL + "user/votes/" + VOTE_ID)
+        perform(MockMvcRequestBuilders.put(URL + VOTE_ID)
                 .contentType(MediaType.APPLICATION_JSON).content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
         MATCHER.assertMatch(repository.getById(VOTE_ID), updated);
@@ -62,7 +62,7 @@ class VoteControllerTest extends AbstractControllerTest {
         repository.delete(VOTE_ID);
         assertFalse(repository.findById(VOTE_ID).isPresent());
         Vote newVote = VoteTestData.getNew();
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL + "/user/votes")
+        ResultActions action = perform(MockMvcRequestBuilders.post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newVote)));
 

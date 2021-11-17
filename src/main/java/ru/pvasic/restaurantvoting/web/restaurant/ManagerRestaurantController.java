@@ -26,12 +26,12 @@ import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.assureId
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew;
 
 @RestController
-@RequestMapping(value = ManagerRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = ManagerRestaurantController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
 public class ManagerRestaurantController {
 
-    static final String REST_URL = "/api/manager/restaurants";
+    static final String URL = "/api/manager/restaurants";
 
     private final RestaurantRepository repository;
     private final RestaurantService service;
@@ -62,7 +62,7 @@ public class ManagerRestaurantController {
         checkNew(restaurant);
         Restaurant created = service.save(restaurant, userId);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/user/restaurants/{id}")
+                .path(RestaurantController.URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }

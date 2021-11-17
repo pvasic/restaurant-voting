@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.pvasic.restaurantvoting.model.Dish;
 import ru.pvasic.restaurantvoting.repository.dish.DishRepository;
@@ -14,11 +15,11 @@ import ru.pvasic.restaurantvoting.repository.dish.DishRepository;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = DishController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = DishController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
 public class DishController {
-    static final String REST_URL = "/api/user/dishes";
+    static final String URL = "/api/user/dishes";
 
     private final DishRepository dishRepository;
 
@@ -28,8 +29,8 @@ public class DishController {
         return ResponseEntity.of(dishRepository.findById(id));
     }
 
-    @GetMapping("/restaurants/{restaurantId}")
-    public List<Dish> getAll(@PathVariable int restaurantId) {
+    @GetMapping
+    public List<Dish> getAll(@RequestParam int restaurantId) {
         log.info("getAll dishes for restaurant {}", restaurantId);
         return dishRepository.getAll(restaurantId);
     }

@@ -17,28 +17,28 @@ import ru.pvasic.restaurantvoting.repository.restaurant.RestaurantRepository;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = RestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = RestaurantController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
 public class RestaurantController {
 
-    static final String REST_URL = "/api";
+    static final String URL = "/api/user/restaurants";
 
     private final RestaurantRepository repository;
 
-    @GetMapping("/user/restaurants/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Restaurant> get(@PathVariable int id) {
         log.info("get restaurant {}", id);
         return ResponseEntity.of(repository.findById(id));
     }
 
-    @GetMapping("/user/restaurants")
+    @GetMapping
     public List<Restaurant> getAll(@AuthenticationPrincipal AuthUser authUser) {
         log.info("getAll restaurants for user {}", authUser.id());
         return repository.findAll(Sort.by(Sort.Direction.ASC, "name", "email"));
     }
 
-    @GetMapping(value = "/user/restaurants/{id}/with-dishes")
+    @GetMapping(value = "/{id}/with-dishes")
     public ResponseEntity<Restaurant> getWithDishes(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         return ResponseEntity.of(repository.getWithDishes(id));
     }

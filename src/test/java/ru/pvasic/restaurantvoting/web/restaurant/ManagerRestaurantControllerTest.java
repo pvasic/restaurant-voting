@@ -21,7 +21,7 @@ import static ru.pvasic.restaurantvoting.web.user.UserTestData.MANAGER_MAIL;
 
 class ManagerRestaurantControllerTest extends AbstractControllerTest {
 
-    private final static String REST_URL = ManagerRestaurantController.REST_URL + "/";
+    private final static String URL = ManagerRestaurantController.URL + "/";
 
     @Autowired
     private RestaurantRepository repository;
@@ -29,7 +29,7 @@ class ManagerRestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = MANAGER_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + RESTAURANT1_ID))
+        perform(MockMvcRequestBuilders.delete(URL + RESTAURANT1_ID))
                 .andExpect(status().isNoContent());
         assertFalse(repository.get(RESTAURANT1_ID, MANAGER_ID).isPresent());
     }
@@ -38,7 +38,7 @@ class ManagerRestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = MANAGER_MAIL)
     void update() throws Exception {
         Restaurant updated = RestaurantTestData.getUpdated();
-        perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT1_ID)
+        perform(MockMvcRequestBuilders.put(URL + RESTAURANT1_ID)
                 .contentType(MediaType.APPLICATION_JSON).content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
 
@@ -49,7 +49,7 @@ class ManagerRestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocation() throws Exception {
         Restaurant newRestaurant = RestaurantTestData.getNew();
-        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+        ResultActions action = perform(MockMvcRequestBuilders.post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newRestaurant)));
 

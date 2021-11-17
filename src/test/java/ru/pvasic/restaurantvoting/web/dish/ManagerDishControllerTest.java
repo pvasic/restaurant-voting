@@ -22,7 +22,7 @@ import static ru.pvasic.restaurantvoting.web.user.UserTestData.MANAGER_MAIL;
 
 class ManagerDishControllerTest extends AbstractControllerTest {
 
-    private final static String REST_URL = "/api/manager/restaurants/" + RESTAURANT1_ID + "/";
+    private final static String URL = ManagerDishController.URL + "/";
 
     @Autowired
     private DishRepository repository;
@@ -30,7 +30,8 @@ class ManagerDishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = MANAGER_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + "dishes/" + DISH1_ID))
+        perform(MockMvcRequestBuilders.delete(URL + DISH1_ID)
+                .param("restaurantId", String.valueOf(RESTAURANT1_ID)))
                 .andExpect(status().isNoContent());
         assertFalse(repository.get(DISH1_ID, MANAGER_ID).isPresent());
     }
@@ -56,6 +57,7 @@ class ManagerDishControllerTest extends AbstractControllerTest {
         MATCHER.assertMatch(repository.getById(newId), newDish);
     }
 
+    // TODO mvn test not passed, fix CustomDishRepositoryImpl
 //    @Test
 //    @Transactional(propagation = Propagation.NOT_SUPPORTED)
 //    @WithUserDetails(value = MANAGER_MAIL)
@@ -63,29 +65,31 @@ class ManagerDishControllerTest extends AbstractControllerTest {
 //        Dish newDish = DishTestData.getNew();
 //        ResultActions action = getPerformPost(newDish);
 //
-//        Dish created = readFromJson(action, Dish.class);
+//        Dish created = MATCHER.readFromJson(action);
 //        int newId = created.id();
 //        newDish.setId(newId);
 //
 //        Dish updated = DishTestData.getUpdated();
 //        performPut(updated);
-//        DISH_MATCHER.assertMatch(created, newDish);
-//        perform(MockMvcRequestBuilders.get(REST_URL + "restaurants/" + RESTAURANT1_ID + "/history-dishes"))
+//        MATCHER.assertMatch(created, newDish);
+//        perform(MockMvcRequestBuilders.get(URL + "/history-dishes")
+//                .param("restaurantId", String.valueOf(RESTAURANT1_ID)))
 //                .andExpect(status().isOk())
 //                .andDo(print())
 //                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-//                .andExpect(DISH_MATCHER.contentJson(newDish, updated));
+//                .andExpect(MATCHER.contentJson(newDish, updated));
 //        repository.deleteAll();
 //    }
 
     private ResultActions getPerformPost(Dish newDish) throws Exception {
-        return perform(MockMvcRequestBuilders.post(REST_URL + "dishes/")
+        return perform(MockMvcRequestBuilders.post(URL)
+                .param("restaurantId", String.valueOf(RESTAURANT1_ID))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newDish)));
     }
 
     private void performPut(Dish updated) throws Exception {
-        perform(MockMvcRequestBuilders.put(REST_URL + "dishes/" + DISH1_ID)
+        perform(MockMvcRequestBuilders.put(URL + DISH1_ID)
                 .contentType(MediaType.APPLICATION_JSON).content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
     }

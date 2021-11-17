@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.pvasic.restaurantvoting.AuthUser;
-import ru.pvasic.restaurantvoting.model.Restaurant;
 import ru.pvasic.restaurantvoting.model.Vote;
 import ru.pvasic.restaurantvoting.repository.restaurant.RestaurantRepository;
 import ru.pvasic.restaurantvoting.repository.vote.VoteRepository;
@@ -29,23 +28,23 @@ import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.assureId
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew;
 
 @RestController
-@RequestMapping(value = VoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = VoteController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
 public class VoteController {
-    static final String REST_URL = "/api";
+    static final String URL = "/api/user/votes";
 
     private final VoteRepository repository;
     private final VoteService service;
     private final RestaurantRepository restaurantRepository;
 
-    @GetMapping("/user/votes/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Vote> get(@PathVariable int id) {
         log.info("get vote {}", id);
         return ResponseEntity.of(repository.findById(id));
     }
 
-    @DeleteMapping("/user/votes/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         int userId = authUser.id();
@@ -55,7 +54,7 @@ public class VoteController {
     }
 
 
-    @PutMapping(value = "/user/votes/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@AuthenticationPrincipal AuthUser authUser, @RequestBody Vote vote, @PathVariable int id) {
         int userId = authUser.id();
@@ -65,7 +64,7 @@ public class VoteController {
         service.update(vote, voteOld);
     }
 
-    @PostMapping(value = "/user/votes", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Vote> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestBody Vote vote) {
         int userId = authUser.id();
         log.info("create vote {} for user {}", vote, userId);
@@ -73,7 +72,7 @@ public class VoteController {
         restaurantRepository.checkByRestaurantId(vote.getRestaurantId());
         Vote created = service.save(vote, userId);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/user/votes/{id}")
+                .path(URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
