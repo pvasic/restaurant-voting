@@ -59,13 +59,13 @@ public class Restaurant extends BaseEntity implements HasIdAndEmail {
     @NoHtml   // https://stackoverflow.com/questions/17480809
     private String email;
 
-    @Column(name = "created", nullable = false, columnDefinition = "timestamp default now()")
+    @Column(name = "created", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     @NotNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date created = new Date();
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", insertable = false, updatable = false)
+    @JoinColumn(name = "restaurant_id", updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)

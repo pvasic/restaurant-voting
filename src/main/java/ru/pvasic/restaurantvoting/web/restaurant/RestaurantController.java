@@ -40,6 +40,7 @@ public class RestaurantController {
 
     @GetMapping(value = "/{id}/with-dishes")
     public ResponseEntity<Restaurant> getWithDishes(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
+        log.info("getAll restaurants with dishes for user {}", authUser.id());
         return ResponseEntity.of(repository.getWithDishes(id));
     }
 }

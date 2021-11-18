@@ -70,7 +70,7 @@ public class User extends NamedEntity implements HasIdAndEmail, Serializable {
     @Column(name = "enabled", nullable = false, columnDefinition = "bool default true")
     private boolean enabled = true;
 
-    @Column(name = "registered", nullable = false, columnDefinition = "timestamp default now()")
+    @Column(name = "registered", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     @NotNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date registered = new Date();
