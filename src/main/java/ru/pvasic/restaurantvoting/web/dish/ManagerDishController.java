@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.pvasic.restaurantvoting.AuthUser;
+import ru.pvasic.restaurantvoting.error.IllegalRequestDataException;
 import ru.pvasic.restaurantvoting.model.Dish;
+import ru.pvasic.restaurantvoting.model.Restaurant;
 import ru.pvasic.restaurantvoting.repository.dish.DishRepository;
 import ru.pvasic.restaurantvoting.repository.restaurant.RestaurantRepository;
 
@@ -35,16 +37,16 @@ import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew
 public class ManagerDishController {
     static final String URL = "/api/manager/dishes";
 
-    private final DishRepository dishRepository;
+    private final DishRepository repository;
     private final RestaurantRepository restaurantRepository;
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@AuthenticationPrincipal AuthUser authUser, @RequestParam int restaurantId, @PathVariable int id) {
+    public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id, @RequestParam int restaurantId) {
         int userId = authUser.id();
         log.info("delete dish with id = {} for user {}", id, userId);
-        dishRepository.checkBelong(id, restaurantId);
-        dishRepository.delete(id);
+        checkBelong(id, restaurantId, userId);
+        repository.delete(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -53,8 +55,9 @@ public class ManagerDishController {
         int userId = authUser.id();
         log.info("update {} for restaurant {}", dish, userId);
         assureIdConsistent(dish, id);
-        dishRepository.checkBelong(id, dish.getRestaurantId());
-        dishRepository.save(dish);
+        int restaurantId = dish.getRestaurantId();
+        checkBelong(id, restaurantId, userId);
+        repository.save(dish);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -64,7 +67,7 @@ public class ManagerDishController {
         checkNew(dish);
         restaurantRepository.checkBelong(restaurantId, userId);
         dish.setRestaurantId(restaurantId);
-        Dish created = dishRepository.save(dish);
+        Dish created = repository.save(dish);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/user/dishes/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -76,6 +79,25 @@ public class ManagerDishController {
         int userId = authUser.id();
         log.info("get restaurant history for user {}", userId);
         restaurantRepository.checkBelong(restaurantId, userId);
-        return dishRepository.getHistoryAll(restaurantId);
+        return repository.getHistoryAll(restaurantId);
+    }
+
+    private void checkBelong(int id, int restaurantId, int userId) {
+
+        // To simplify verification, you can add idUser to Dish or bi-directional Dish-Restaurant relationship to the Dish.
+        Restaurant restaurant = restaurantRepository.getWithDishes(restaurantId).orElseThrow(
+                () -> new IllegalRequestDataException("Restaurant for id=" + id + " not found!"));
+        List<Dish> dishes = restaurant.getDishes();
+        if (!dishes.isEmpty()) {
+            if (dishes.stream().noneMatch(d -> d.getId() == id)) {
+                if (restaurant.getUserId() != userId) {
+                    throw new IllegalRequestDataException("Restaurant for id=" + restaurantId + " doesn't belong to User id=" + userId);
+                } else {
+                    throw new IllegalRequestDataException("Dish for id=" + id + " not found!");
+                }
+            }
+        } else {
+            throw new IllegalRequestDataException("Dish for id=" + id + " not found!");
+        }
     }
 }

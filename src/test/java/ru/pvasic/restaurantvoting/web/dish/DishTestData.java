@@ -21,16 +21,15 @@ public class DishTestData {
     public static final Dish DISH_3 = new Dish(DISH3_ID, "Картошка", 100, LocalDateTime.of(2021, Month.MAY, 8, 18, 0, 0), 2);
     public static final Dish DISH_4 = new Dish(DISH4_ID, "Рис", 200, LocalDateTime.of(2021, Month.MAY, 8, 10, 0, 0), 2);
 
-    public static final List<Dish> dishes = List.of(DISH_1, DISH_2);
+    public static final List<Dish> dishes1 = List.of(DISH_1, DISH_2);
+    public static final List<Dish> dishes2 = List.of(DISH_3, DISH_4);
 
     public static Dish getUpdated() {
-        Dish updatedDish = new Dish(DISH1_ID, "Обновлённое блюдо", 555, DISH_1.getDateTime().plus(2, ChronoUnit.MINUTES), 1);
-        return updatedDish;
+        return new Dish(DISH1_ID, "Обновлённое блюдо", 555, DISH_1.getDateTime().plus(2, ChronoUnit.MINUTES), 1);
 
     }
 
     public static Dish getNew() {
-        Dish newDish = new Dish(null, "Новое блюдо", 333, LocalDateTime.of(2021, Month.MAY, 15, 9, 15, 0), 1);
-        return newDish;
+        return new Dish(null, "Новое блюдо", 333, LocalDateTime.of(2021, Month.MAY, 15, 9, 15, 0), 1);
     }
 }

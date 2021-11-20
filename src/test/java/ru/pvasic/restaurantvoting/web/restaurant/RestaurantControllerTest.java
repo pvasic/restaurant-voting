@@ -44,10 +44,6 @@ class RestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void getWithDishes() throws Exception {
-
-        //TODO mvn test not passed, dishes = null
-        restaurant_1.setDishes(DishTestData.dishes);
-
         perform(MockMvcRequestBuilders.get(URL + RESTAURANT1_ID + "/with-dishes"))
                 .andExpect(status().isOk())
                 .andDo(print())

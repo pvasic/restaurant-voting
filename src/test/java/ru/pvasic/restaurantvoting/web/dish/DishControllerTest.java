@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.pvasic.restaurantvoting.web.dish.DishTestData.DISH1_ID;
 import static ru.pvasic.restaurantvoting.web.dish.DishTestData.DISH_1;
 import static ru.pvasic.restaurantvoting.web.dish.DishTestData.MATCHER;
-import static ru.pvasic.restaurantvoting.web.dish.DishTestData.dishes;
+import static ru.pvasic.restaurantvoting.web.dish.DishTestData.dishes1;
 import static ru.pvasic.restaurantvoting.web.restaurant.RestaurantTestData.RESTAURANT1_ID;
 import static ru.pvasic.restaurantvoting.web.user.UserTestData.USER_MAIL;
 
@@ -38,6 +38,6 @@ class DishControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MATCHER.contentJson(dishes));
+                .andExpect(MATCHER.contentJson(dishes1));
     }
 }

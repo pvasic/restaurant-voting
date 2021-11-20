@@ -6,8 +6,11 @@ import ru.pvasic.restaurantvoting.model.Restaurant;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static ru.pvasic.restaurantvoting.web.dish.DishTestData.*;
-import static ru.pvasic.restaurantvoting.web.user.UserTestData.*;
+import static ru.pvasic.restaurantvoting.web.dish.DishTestData.dishes1;
+import static ru.pvasic.restaurantvoting.web.dish.DishTestData.dishes2;
+import static ru.pvasic.restaurantvoting.web.user.UserTestData.ADMIN_ID;
+import static ru.pvasic.restaurantvoting.web.user.UserTestData.MANAGER_ID;
+import static ru.pvasic.restaurantvoting.web.user.UserTestData.USER_ID;
 
 public class RestaurantTestData {
     public static final MatcherFactory.Matcher<Restaurant> MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "created", "dishes");
@@ -28,7 +31,8 @@ public class RestaurantTestData {
     public static final Restaurant restaurant_2 = new Restaurant(RESTAURANT2_ID, ADMIN_ID, "DoDoPizza", "Мытищи", "dodo@do.com");
 
     static {
-        restaurant_1.setDishes(dishes);
+        restaurant_1.setDishes(dishes1);
+        restaurant_2.setDishes(dishes2);
     }
 
     public static final List<Restaurant> RESTAURANTS = List.of(restaurant_2, restaurant_1);
