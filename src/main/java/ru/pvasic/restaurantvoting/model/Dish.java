@@ -16,10 +16,10 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity(name = "Dish")
-@Table(name = "dishes", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "date_time"}, name = "dishes_unique_name_date_time_idx")})
+@Table(name = "dishes", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "date"}, name = "dishes_unique_name_date_idx")})
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -37,17 +37,21 @@ public class Dish extends BaseEntity {
     @NotNull
     private int price;
 
-    @Column(name = "date_time", nullable = false)
-    private LocalDateTime dateTime;
+    @Column(name = "date", nullable = false, columnDefinition = "timestamp default now()")
+    private LocalDate date = LocalDate.now();
 
     @Column(name = "restaurant_id")
     private Integer restaurantId;
 
-    public Dish(Integer id, String name, int price, LocalDateTime dateTime, Integer restaurantId) {
+    public Dish(Integer id, String name, int price, Integer restaurantId) {
+        this(id, name, price, LocalDate.now(), restaurantId);
+    }
+
+    public Dish(Integer id, String name, int price, LocalDate date, Integer restaurantId) {
         super(id);
         this.name = name;
         this.price = price;
-        this.dateTime = dateTime;
+        this.date = date;
         this.restaurantId = restaurantId;
     }
 }
