@@ -8,6 +8,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.pvasic.restaurantvoting.model.Vote;
 import ru.pvasic.restaurantvoting.repository.vote.VoteRepository;
+import ru.pvasic.restaurantvoting.to.VoteTo;
 import ru.pvasic.restaurantvoting.util.JsonUtil;
 import ru.pvasic.restaurantvoting.web.AbstractControllerTest;
 
@@ -15,11 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.pvasic.restaurantvoting.web.user.UserTestData.USER_ID;
-import static ru.pvasic.restaurantvoting.web.user.UserTestData.USER_MAIL;
-import static ru.pvasic.restaurantvoting.web.vote.VoteTestData.VOTE_ID;
+import static ru.pvasic.restaurantvoting.util.VoteUtil.*;
+import static ru.pvasic.restaurantvoting.web.restaurant.RestaurantTestData.*;
+import static ru.pvasic.restaurantvoting.web.user.UserTestData.*;
+import static ru.pvasic.restaurantvoting.web.vote.VoteTestData.*;
 import static ru.pvasic.restaurantvoting.web.vote.VoteTestData.MATCHER;
-import static ru.pvasic.restaurantvoting.web.vote.VoteTestData.vote;
 
 class VoteControllerTest extends AbstractControllerTest {
 
@@ -49,22 +50,22 @@ class VoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void update() throws Exception {
-        Vote updated = VoteTestData.getUpdated();
+        VoteTo updateTo = new VoteTo(VOTE_ID, RESTAURANT2_ID);
+        Vote updated = createUpdateFromTo(updateTo, USER_ID);
         perform(MockMvcRequestBuilders.put(URL + VOTE_ID)
-                .contentType(MediaType.APPLICATION_JSON).content(JsonUtil.writeValue(updated)))
+                .contentType(MediaType.APPLICATION_JSON).content(JsonUtil.writeValue(updateTo)))
                 .andExpect(status().isNoContent());
         MATCHER.assertMatch(repository.getById(VOTE_ID), updated);
     }
 
     @Test
-    @WithUserDetails(value = USER_MAIL)
+    @WithUserDetails(value = MANAGER_MAIL)
     void createWithLocation() throws Exception {
-        repository.delete(VOTE_ID);
-        assertFalse(repository.findById(VOTE_ID).isPresent());
-        Vote newVote = VoteTestData.getNew();
+        VoteTo newTo = new VoteTo(null, RESTAURANT2_ID);
+        Vote newVote = createNewFromTo(newTo, MANAGER_ID);
         ResultActions action = perform(MockMvcRequestBuilders.post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(newVote)));
+                .content(JsonUtil.writeValue(newTo)));
 
         Vote created = MATCHER.readFromJson(action);
         int newId = created.id();

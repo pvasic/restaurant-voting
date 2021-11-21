@@ -26,6 +26,8 @@ public class DishController {
     @GetMapping("/{id}")
     public ResponseEntity<Dish> get(@PathVariable int id) {
         log.info("get dish {}", id);
+
+        // TODO fix add userId to model Dish
         return ResponseEntity.of(dishRepository.findById(id));
     }
 

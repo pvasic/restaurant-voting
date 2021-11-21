@@ -21,8 +21,10 @@ import ru.pvasic.restaurantvoting.model.Vote;
 import ru.pvasic.restaurantvoting.repository.restaurant.RestaurantRepository;
 import ru.pvasic.restaurantvoting.repository.vote.VoteRepository;
 import ru.pvasic.restaurantvoting.service.vote.VoteService;
+import ru.pvasic.restaurantvoting.to.VoteTo;
 
 import java.net.URI;
+import java.time.LocalDate;
 
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew;
@@ -39,9 +41,9 @@ public class VoteController {
     private final RestaurantRepository restaurantRepository;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Vote> get(@PathVariable int id) {
-        log.info("get vote {}", id);
-        return ResponseEntity.of(repository.findById(id));
+    public ResponseEntity<Vote> get(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
+        log.info("get vote {} for user {}", id, authUser.id());
+        return ResponseEntity.of(repository.get(id, authUser.id()));
     }
 
     @DeleteMapping("/{id}")
@@ -49,28 +51,28 @@ public class VoteController {
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         int userId = authUser.id();
         log.info("delete {} for user {}", id, userId);
-        Vote vote = repository.checkBelong(id, userId);
-        service.delete(id, vote);
+        LocalDate oldDate = repository.checkBelong(id, userId).getDateTime().toLocalDate();
+        service.delete(id, oldDate);
     }
 
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@AuthenticationPrincipal AuthUser authUser, @RequestBody Vote vote, @PathVariable int id) {
+    public void update(@AuthenticationPrincipal AuthUser authUser, @RequestBody VoteTo voteTo, @PathVariable int id) {
         int userId = authUser.id();
         log.info("update vote {} for user {}", id, userId);
-        assureIdConsistent(vote, id);
-        Vote voteOld = repository.checkBelong(id, userId);
-        service.update(vote, voteOld);
+        assureIdConsistent(voteTo, id);
+        LocalDate oldDate = repository.checkBelong(id, userId).getDateTime().toLocalDate();
+        service.update(voteTo, oldDate, userId);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Vote> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestBody Vote vote) {
+    public ResponseEntity<Vote> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestBody VoteTo voteTo) {
         int userId = authUser.id();
-        log.info("create vote {} for user {}", vote, userId);
-        checkNew(vote);
-        restaurantRepository.checkByRestaurantId(vote.getRestaurantId());
-        Vote created = service.save(vote, userId);
+        log.info("create voteTo {} for user {}", voteTo, userId);
+        checkNew(voteTo);
+        restaurantRepository.checkByRestaurantId(voteTo.getRestaurantId());
+        Vote created = service.save(voteTo, repository.getByUserId(userId), userId);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();

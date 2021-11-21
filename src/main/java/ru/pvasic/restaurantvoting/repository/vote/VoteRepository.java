@@ -14,8 +14,11 @@ public interface VoteRepository extends BaseRepository<Vote>, CustomVoteReposito
     @Query("SELECT v FROM Vote v WHERE v.id = :id and v.userId = :userId")
     Optional<Vote> get(int id, int userId);
 
+    @Query("SELECT v FROM Vote v WHERE v.userId = :userId")
+    Optional<Vote> getByUserId(int userId);
+
     default Vote checkBelong(int id, int userId) {
         return get(id, userId).orElseThrow(
-                () -> new IllegalRequestDataException("Vote id =" + id + " doesn't belong to User id=" + userId));
+                () -> new IllegalRequestDataException("Vote id =" + id + " not found for User id=" + userId));
     }
 }

@@ -40,7 +40,7 @@ class ManagerDishControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = MANAGER_MAIL)
     void update() throws Exception {
         Dish updated = DishTestData.getUpdated();
-        performPut(updated);
+        callPerformPut(updated);
         MATCHER.assertMatch(repository.getById(DISH1_ID), updated);
     }
 
@@ -48,7 +48,7 @@ class ManagerDishControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = MANAGER_MAIL)
     void createWithLocation() throws Exception {
         Dish newDish = DishTestData.getNew();
-        ResultActions action = getPerformPost(newDish);
+        ResultActions action = callPerformPost(newDish);
 
         Dish created = DishTestData.MATCHER.readFromJson(action);
         int newId = created.id();
@@ -63,14 +63,14 @@ class ManagerDishControllerTest extends AbstractControllerTest {
 //    @WithUserDetails(value = MANAGER_MAIL)
 //    void getHistoryAll() throws Exception {
 //        Dish newDish = DishTestData.getNew();
-//        ResultActions action = getPerformPost(newDish);
+//        ResultActions action = callPerformPost(newDish);
 //
 //        Dish created = MATCHER.readFromJson(action);
 //        int newId = created.id();
 //        newDish.setId(newId);
 //
 //        Dish updated = DishTestData.getUpdated();
-//        performPut(updated);
+//        callPerformPut(updated);
 //        MATCHER.assertMatch(created, newDish);
 //        perform(MockMvcRequestBuilders.get(URL + "/history-dishes")
 //                .param("restaurantId", String.valueOf(RESTAURANT1_ID)))
@@ -81,14 +81,14 @@ class ManagerDishControllerTest extends AbstractControllerTest {
 //        repository.deleteAll();
 //    }
 
-    private ResultActions getPerformPost(Dish newDish) throws Exception {
+    private ResultActions callPerformPost(Dish newDish) throws Exception {
         return perform(MockMvcRequestBuilders.post(URL)
                 .param("restaurantId", String.valueOf(RESTAURANT1_ID))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newDish)));
     }
 
-    private void performPut(Dish updated) throws Exception {
+    private void callPerformPut(Dish updated) throws Exception {
         perform(MockMvcRequestBuilders.put(URL + DISH1_ID)
                 .contentType(MediaType.APPLICATION_JSON).content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());

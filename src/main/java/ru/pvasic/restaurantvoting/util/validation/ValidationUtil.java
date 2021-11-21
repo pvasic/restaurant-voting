@@ -28,32 +28,19 @@ public class ValidationUtil {
         }
     }
 
-    public static void checkSingleModification(int count, String msg) {
-        if (count != 1) {
-            throw new NotFoundException(msg);
-        }
-    }
-
     public static void checkModification(int count, int id) {
         if (count == 0) {
             throw new NotFoundException("Entity with id=" + id + " not found");
         }
     }
 
-    public static void checkVoteDateTime(Integer voteId, LocalDateTime voteDateTime, LocalDate oldVoteDate) {
-        boolean check = oldVoteDate.atStartOfDay().toLocalDate().equals(voteDateTime.toLocalDate());
+    public static void checkVoteDateTime(Integer voteId, LocalDate oldVoteDate) {
+        LocalDateTime dateTimeNow = LocalDateTime.now();
+        boolean check = oldVoteDate.atStartOfDay().toLocalDate().equals(dateTimeNow.toLocalDate());
         if (check) {
-            if (!voteDateTime.toLocalTime().isBefore(DEFAULT_VOTE_TIME)) {
-                throw new IllegalRequestDataException("Vote time =" + voteDateTime + " should be less " + DEFAULT_VOTE_TIME + ", for entity with id=" + voteId);
+            if (!dateTimeNow.toLocalTime().isBefore(DEFAULT_VOTE_TIME)) {
+                throw new IllegalRequestDataException("Time now =" + dateTimeNow + ". You can only vote up to " + DEFAULT_VOTE_TIME + ", for Vote with id=" + voteId);
             }
-        }
-    }
-
-    public static int checkPositive(int voteCount) {
-        if (voteCount >= 0) {
-            return voteCount;
-        } else {
-            throw new IllegalRequestDataException("Vote count =" + voteCount + " must be greater 0");
         }
     }
 }
