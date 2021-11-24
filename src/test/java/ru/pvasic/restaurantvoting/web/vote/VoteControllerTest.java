@@ -51,7 +51,7 @@ class VoteControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = USER_MAIL)
     void update() throws Exception {
         VoteTo updateTo = new VoteTo(VOTE_ID, RESTAURANT2_ID);
-        Vote updated = createUpdateFromTo(updateTo, USER_ID);
+        Vote updated = voteFromTo(updateTo, USER_ID);
         perform(MockMvcRequestBuilders.put(URL + VOTE_ID)
                 .contentType(MediaType.APPLICATION_JSON).content(JsonUtil.writeValue(updateTo)))
                 .andExpect(status().isNoContent());
@@ -62,7 +62,7 @@ class VoteControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = MANAGER_MAIL)
     void createWithLocation() throws Exception {
         VoteTo newTo = new VoteTo(null, RESTAURANT2_ID);
-        Vote newVote = createNewFromTo(newTo, MANAGER_ID);
+        Vote newVote = voteFromTo(newTo, MANAGER_ID);
         ResultActions action = perform(MockMvcRequestBuilders.post(URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newTo)));

@@ -73,7 +73,7 @@ public class VoteController {
         log.info("create voteTo {} for user {}", voteTo, userId);
         checkNew(voteTo);
         restaurantRepository.checkByRestaurantId(voteTo.getRestaurantId());
-        Vote created = service.save(voteTo, repository.getByUserId(userId), userId);
+        Vote created = service.save(voteTo, userId);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
