@@ -29,7 +29,7 @@ public class RestaurantController {
     @GetMapping("/{id}")
     public ResponseEntity<Restaurant> get(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("get restaurant {} for user {}", id, authUser.id());
-        return ResponseEntity.of(repository.get(id, authUser.id()));
+        return ResponseEntity.of(repository.findById(id));
     }
 
     @GetMapping
