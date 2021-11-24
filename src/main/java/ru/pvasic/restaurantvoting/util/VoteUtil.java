@@ -8,7 +8,7 @@ import java.time.LocalTime;
 
 @UtilityClass
 public class VoteUtil {
-    public static final LocalTime DEFAULT_VOTE_TIME = LocalTime.of(11, 00);
+    public static final LocalTime LIMIT_VOTE_TIME = LocalTime.of(11, 00);
 
     public static Vote createNewFromTo(VoteTo voteTo, int userId) {
         return new Vote(null, userId, voteTo.getRestaurantId());

@@ -52,7 +52,7 @@ public class ManagerDishController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@AuthenticationPrincipal AuthUser authUser, @RequestBody Dish dish, @PathVariable int id) {
+    public void update(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody Dish dish, @PathVariable int id) {
         int userId = authUser.id();
         log.info("update {} for restaurant {}", dish, userId);
         assureIdConsistent(dish, id);
@@ -64,7 +64,7 @@ public class ManagerDishController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Dish> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestBody Dish dish, @RequestParam int restaurantId) {
+    public ResponseEntity<Dish> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody Dish dish, @RequestParam int restaurantId) {
         int userId = authUser.id();
         log.info("create {} for user {}", dish, userId);
         checkNew(dish);

@@ -23,6 +23,7 @@ import ru.pvasic.restaurantvoting.repository.vote.VoteRepository;
 import ru.pvasic.restaurantvoting.service.vote.VoteService;
 import ru.pvasic.restaurantvoting.to.VoteTo;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 
@@ -58,7 +59,7 @@ public class VoteController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@AuthenticationPrincipal AuthUser authUser, @RequestBody VoteTo voteTo, @PathVariable int id) {
+    public void update(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody VoteTo voteTo, @PathVariable int id) {
         int userId = authUser.id();
         log.info("update vote {} for user {}", id, userId);
         assureIdConsistent(voteTo, id);
@@ -67,7 +68,7 @@ public class VoteController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Vote> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestBody VoteTo voteTo) {
+    public ResponseEntity<Vote> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody VoteTo voteTo) {
         int userId = authUser.id();
         log.info("create voteTo {} for user {}", voteTo, userId);
         checkNew(voteTo);

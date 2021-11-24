@@ -20,6 +20,7 @@ import ru.pvasic.restaurantvoting.model.Restaurant;
 import ru.pvasic.restaurantvoting.repository.restaurant.RestaurantRepository;
 import ru.pvasic.restaurantvoting.service.restaurant.RestaurantService;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.assureIdConsistent;
@@ -47,7 +48,7 @@ public class ManagerRestaurantController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@AuthenticationPrincipal AuthUser authUser, @RequestBody Restaurant restaurant, @PathVariable int id) {
+    public void update(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         int userId = authUser.id();
         log.info("update {} restaurant {}", restaurant, userId);
         assureIdConsistent(restaurant, id);
@@ -56,7 +57,7 @@ public class ManagerRestaurantController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Restaurant> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @RequestBody Restaurant restaurant) {
+    public ResponseEntity<Restaurant> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody Restaurant restaurant) {
         int userId = authUser.id();
         log.info("create {} for user {}", restaurant, userId);
         checkNew(restaurant);

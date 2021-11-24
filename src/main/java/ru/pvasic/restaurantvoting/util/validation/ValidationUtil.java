@@ -8,7 +8,7 @@ import ru.pvasic.restaurantvoting.error.NotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static ru.pvasic.restaurantvoting.util.VoteUtil.DEFAULT_VOTE_TIME;
+import static ru.pvasic.restaurantvoting.util.VoteUtil.LIMIT_VOTE_TIME;
 
 @UtilityClass
 public class ValidationUtil {
@@ -38,8 +38,8 @@ public class ValidationUtil {
         LocalDateTime dateTimeNow = LocalDateTime.now();
         boolean check = oldVoteDate.atStartOfDay().toLocalDate().equals(dateTimeNow.toLocalDate());
         if (check) {
-            if (!dateTimeNow.toLocalTime().isBefore(DEFAULT_VOTE_TIME)) {
-                throw new IllegalRequestDataException("Time now =" + dateTimeNow + ". You can only vote up to " + DEFAULT_VOTE_TIME + ", for Vote with id=" + voteId);
+            if (!dateTimeNow.toLocalTime().isBefore(LIMIT_VOTE_TIME)) {
+                throw new IllegalRequestDataException("Time now =" + dateTimeNow + ". You can only vote up to " + LIMIT_VOTE_TIME + ", for Vote with id=" + voteId);
             }
         }
     }
