@@ -27,9 +27,9 @@ public class RestaurantController {
     private final RestaurantRepository repository;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Restaurant> get(@PathVariable int id) {
-        log.info("get restaurant {}", id);
-        return ResponseEntity.of(repository.findById(id));
+    public ResponseEntity<Restaurant> get(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
+        log.info("get restaurant {} for user {}", id, authUser.id());
+        return ResponseEntity.of(repository.get(id, authUser.id()));
     }
 
     @GetMapping
