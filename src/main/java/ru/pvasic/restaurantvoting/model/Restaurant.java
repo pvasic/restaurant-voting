@@ -38,15 +38,11 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @Audited
-public class Restaurant extends BaseEntity implements HasIdAndEmail {
+public class Restaurant extends NamedEntity implements HasIdAndEmail {
+
     @Column(name = "user_id")
     @NotNull
     private Integer userId;
-
-    @NotBlank
-    @Size(min = 2, max = 100)
-    @Column(name = "name", nullable = false)
-    protected String name;
 
     @Column(name = "address", nullable = false)
     @NotEmpty
@@ -76,9 +72,8 @@ public class Restaurant extends BaseEntity implements HasIdAndEmail {
     }
 
     public Restaurant(Integer id, Integer userId, String name, String address, String email, Date created) {
-        super(id);
+        super(id, name);
         this.userId = userId;
-        this.name = name;
         this.address = address;
         this.email = email;
         this.created = created;

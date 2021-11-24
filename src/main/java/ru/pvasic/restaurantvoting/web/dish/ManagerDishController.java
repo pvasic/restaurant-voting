@@ -24,6 +24,7 @@ import ru.pvasic.restaurantvoting.model.Restaurant;
 import ru.pvasic.restaurantvoting.repository.dish.DishRepository;
 import ru.pvasic.restaurantvoting.repository.restaurant.RestaurantRepository;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 

@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
@@ -26,24 +27,22 @@ import java.time.LocalDate;
 @ToString(callSuper = true)
 @EntityListeners(AuditingEntityListener.class)
 @Audited
-public class Dish extends BaseEntity {
-
-    @NotBlank
-    @Size(min = 2, max = 100)
-    @Column(name = "name", nullable = false)
-    protected String name;
+public class Dish extends NamedEntity {
 
     @Column(name = "price", nullable = false)
     @NotNull
     private int price;
 
     @Column(name = "date", nullable = false, columnDefinition = "timestamp default now()")
+    @NotNull
     private LocalDate date = LocalDate.now();
 
     @Column(name = "restaurant_id")
+    @NotNull
     private Integer restaurantId;
 
     @Column(name = "user_id")
+    @NotNull
     private Integer userId;
 
     public Dish(Integer id, String name, int price, Integer restaurantId, Integer userId) {
@@ -51,8 +50,7 @@ public class Dish extends BaseEntity {
     }
 
     public Dish(Integer id, String name, int price, LocalDate date, Integer restaurantId, Integer userId) {
-        super(id);
-        this.name = name;
+        super(id, name);
         this.price = price;
         this.date = date;
         this.restaurantId = restaurantId;
