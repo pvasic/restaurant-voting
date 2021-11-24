@@ -43,15 +43,19 @@ public class Dish extends BaseEntity {
     @Column(name = "restaurant_id")
     private Integer restaurantId;
 
-    public Dish(Integer id, String name, int price, Integer restaurantId) {
-        this(id, name, price, LocalDate.now(), restaurantId);
+    @Column(name = "user_id")
+    private Integer userId;
+
+    public Dish(Integer id, String name, int price, Integer restaurantId, Integer userId) {
+        this(id, name, price, LocalDate.now(), restaurantId, userId);
     }
 
-    public Dish(Integer id, String name, int price, LocalDate date, Integer restaurantId) {
+    public Dish(Integer id, String name, int price, LocalDate date, Integer restaurantId, Integer userId) {
         super(id);
         this.name = name;
         this.price = price;
         this.date = date;
         this.restaurantId = restaurantId;
+        this.userId = userId;
     }
 }

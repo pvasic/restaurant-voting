@@ -12,14 +12,14 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface DishRepository extends BaseRepository<Dish>, CustomDishRepository {
 
-    @Query("SELECT d FROM Dish d WHERE d.id = :id AND d.restaurantId = :restaurantId")
-    Optional<Dish> get(int id, int restaurantId);
+    @Query("SELECT d FROM Dish d WHERE d.id = :id AND d.userId = :userId")
+    Optional<Dish> get(int id, int userId);
 
     @Query("SELECT d FROM Dish d WHERE d.restaurantId=:restaurantId ORDER BY d.date DESC")
     List<Dish> getAll(int restaurantId);
 
-    default Dish checkBelong(int id, int restaurantId) {
-        return get(id, restaurantId).orElseThrow(
-                () -> new IllegalRequestDataException("Dish id=" + id + " doesn't belong to restaurant id=" + restaurantId));
+    default Dish checkBelong(int id, int userId) {
+        return get(id, userId).orElseThrow(
+                () -> new IllegalRequestDataException("Dish id=" + id + " doesn't belong to user id=" + userId));
     }
 }

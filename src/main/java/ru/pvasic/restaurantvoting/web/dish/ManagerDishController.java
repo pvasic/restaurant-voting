@@ -45,7 +45,7 @@ public class ManagerDishController {
     public void delete(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id, @RequestParam int restaurantId) {
         int userId = authUser.id();
         log.info("delete dish with id = {} for user {}", id, userId);
-        checkBelong(id, restaurantId, userId);
+        repository.checkBelong(id, userId);
         repository.delete(id);
     }
 
@@ -55,10 +55,11 @@ public class ManagerDishController {
         int userId = authUser.id();
         log.info("update {} for restaurant {}", dish, userId);
         assureIdConsistent(dish, id);
-        checkBelong(id, dish.getRestaurantId(), userId);
+        Dish oldDish = repository.checkBelong(id, userId);
+        Dish updatedDish = new Dish(oldDish.id(), dish.getName(), dish.getPrice(), oldDish.getRestaurantId(), userId);
 
         // TODO add check unique date-name
-        repository.save(dish);
+        repository.save(updatedDish);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -68,6 +69,8 @@ public class ManagerDishController {
         checkNew(dish);
         restaurantRepository.checkBelong(restaurantId, userId);
         dish.setRestaurantId(restaurantId);
+
+        // TODO add check unique date-name
         Dish created = repository.save(dish);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/user/dishes/{id}")
@@ -81,24 +84,5 @@ public class ManagerDishController {
         log.info("get restaurant history for user {}", userId);
         restaurantRepository.checkBelong(restaurantId, userId);
         return repository.getHistoryAll(restaurantId);
-    }
-
-    private void checkBelong(int id, int restaurantId, int userId) {
-
-        // To simplify verification, you can add idUser to Dish or bi-directional Dish-Restaurant relationship to the Dish.
-        Restaurant restaurant = restaurantRepository.getWithDishes(restaurantId).orElseThrow(
-                () -> new IllegalRequestDataException("Restaurant for id=" + id + " not found!"));
-        List<Dish> dishes = restaurant.getDishes();
-        if (!dishes.isEmpty()) {
-            if (dishes.stream().noneMatch(d -> d.getId() == id)) {
-                if (restaurant.getUserId() != userId) {
-                    throw new IllegalRequestDataException("Restaurant for id=" + restaurantId + " doesn't belong to User id=" + userId);
-                } else {
-                    throw new IllegalRequestDataException("Dish for id=" + id + " not found!");
-                }
-            }
-        } else {
-            throw new IllegalRequestDataException("Dish for id=" + id + " not found!");
-        }
     }
 }
