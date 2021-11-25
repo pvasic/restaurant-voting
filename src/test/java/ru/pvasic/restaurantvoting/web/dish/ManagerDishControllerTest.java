@@ -8,11 +8,13 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.pvasic.restaurantvoting.model.Dish;
 import ru.pvasic.restaurantvoting.repository.dish.DishRepository;
+import ru.pvasic.restaurantvoting.to.DishTo;
 import ru.pvasic.restaurantvoting.util.JsonUtil;
 import ru.pvasic.restaurantvoting.web.AbstractControllerTest;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.pvasic.restaurantvoting.util.DishUtil.*;
 import static ru.pvasic.restaurantvoting.web.dish.DishTestData.DISH1_ID;
 import static ru.pvasic.restaurantvoting.web.dish.DishTestData.MATCHER;
 import static ru.pvasic.restaurantvoting.web.restaurant.RestaurantTestData.RESTAURANT1_ID;
@@ -39,7 +41,8 @@ class ManagerDishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = MANAGER_MAIL)
     void update() throws Exception {
-        Dish updated = DishTestData.getUpdated();
+        DishTo dishTo = DishTestData.getUpdated();
+        Dish updated = updateFromTo(dishTo, DISH1_ID, MANAGER_ID);
         callPerformPut(updated);
         MATCHER.assertMatch(repository.getById(DISH1_ID), updated);
     }
@@ -47,7 +50,8 @@ class ManagerDishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = MANAGER_MAIL)
     void createWithLocation() throws Exception {
-        Dish newDish = DishTestData.getNew();
+        DishTo dishTo = DishTestData.getNew();
+        Dish newDish = newFromTo(dishTo, MANAGER_ID);
         ResultActions action = callPerformPost(newDish);
 
         Dish created = DishTestData.MATCHER.readFromJson(action);
@@ -83,7 +87,6 @@ class ManagerDishControllerTest extends AbstractControllerTest {
 
     private ResultActions callPerformPost(Dish newDish) throws Exception {
         return perform(MockMvcRequestBuilders.post(URL)
-                .param("restaurantId", String.valueOf(RESTAURANT1_ID))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newDish)));
     }

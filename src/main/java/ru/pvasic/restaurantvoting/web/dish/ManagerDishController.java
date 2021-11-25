@@ -18,16 +18,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.pvasic.restaurantvoting.AuthUser;
-import ru.pvasic.restaurantvoting.error.IllegalRequestDataException;
 import ru.pvasic.restaurantvoting.model.Dish;
-import ru.pvasic.restaurantvoting.model.Restaurant;
 import ru.pvasic.restaurantvoting.repository.dish.DishRepository;
 import ru.pvasic.restaurantvoting.repository.restaurant.RestaurantRepository;
+import ru.pvasic.restaurantvoting.to.DishTo;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import static ru.pvasic.restaurantvoting.util.DishUtil.newFromTo;
+import static ru.pvasic.restaurantvoting.util.DishUtil.updateFromTo;
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew;
 
@@ -52,27 +53,25 @@ public class ManagerDishController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody Dish dish, @PathVariable int id) {
+    public void update(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody DishTo dishTo, @PathVariable int id) {
         int userId = authUser.id();
-        log.info("update {} for restaurant {}", dish, userId);
-        assureIdConsistent(dish, id);
-        Dish oldDish = repository.checkBelong(id, userId);
-        Dish updatedDish = new Dish(oldDish.id(), dish.getName(), dish.getPrice(), oldDish.getRestaurantId(), userId);
+        log.info("update {} for user {}", dishTo, userId);
+        assureIdConsistent(dishTo, id);
+        repository.checkBelong(id, userId);
 
         // TODO add check unique date-name
-        repository.save(updatedDish);
+        repository.save(updateFromTo(dishTo, id, userId));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Dish> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody Dish dish, @RequestParam int restaurantId) {
+    public ResponseEntity<Dish> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody DishTo dishTo) {
         int userId = authUser.id();
-        log.info("create {} for user {}", dish, userId);
-        checkNew(dish);
-        restaurantRepository.checkBelong(restaurantId, userId);
-        dish.setRestaurantId(restaurantId);
+        log.info("create {} for user {}", dishTo, userId);
+        checkNew(dishTo);
+        restaurantRepository.checkBelong(dishTo.getRestaurantId(), userId);
 
         // TODO add check unique date-name
-        Dish created = repository.save(dish);
+        Dish created = repository.save(newFromTo(dishTo, userId));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/user/dishes/{id}")
                 .buildAndExpand(created.getId()).toUri();

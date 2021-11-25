@@ -2,6 +2,7 @@ package ru.pvasic.restaurantvoting.web.dish;
 
 import ru.pvasic.restaurantvoting.MatcherFactory;
 import ru.pvasic.restaurantvoting.model.Dish;
+import ru.pvasic.restaurantvoting.to.DishTo;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -11,7 +12,7 @@ import static ru.pvasic.restaurantvoting.web.user.UserTestData.ADMIN_ID;
 import static ru.pvasic.restaurantvoting.web.user.UserTestData.MANAGER_ID;
 
 public class DishTestData {
-    public static final MatcherFactory.Matcher<Dish> MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Dish.class, "restaurant");
+    public static final MatcherFactory.Matcher<Dish> MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Dish.class);
 
     public static final int DISH1_ID = 1;
     public static final int DISH2_ID = 2;
@@ -26,12 +27,12 @@ public class DishTestData {
     public static final List<Dish> dishes1 = List.of(DISH_1, DISH_2);
     public static final List<Dish> dishes2 = List.of(DISH_3, DISH_4);
 
-    public static Dish getUpdated() {
-        return new Dish(DISH1_ID, "Обновлённое блюдо", 555, LocalDate.now(), 1, MANAGER_ID);
+    public static DishTo getUpdated() {
+        return new DishTo(DISH1_ID, "Обновлённое блюдо", 555, 1);
 
     }
 
-    public static Dish getNew() {
-        return new Dish(null, "Новое блюдо", 333, LocalDate.of(2021, Month.APRIL, 15), 1, MANAGER_ID);
+    public static DishTo getNew() {
+        return new DishTo(null, "Новое блюдо", 333,1);
     }
 }
