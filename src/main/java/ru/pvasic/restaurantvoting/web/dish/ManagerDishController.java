@@ -2,6 +2,8 @@ package ru.pvasic.restaurantvoting.web.dish;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +37,7 @@ import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew
 @RequestMapping(value = ManagerDishController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
+@CacheConfig(cacheNames = "dishes")
 public class ManagerDishController {
     static final String URL = "/api/manager/dishes";
 
@@ -52,6 +55,7 @@ public class ManagerDishController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(allEntries = true)
     public void update(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody DishTo dishTo, @PathVariable int id) {
         int userId = authUser.id();
         log.info("update {} for user {}", dishTo, userId);
@@ -63,6 +67,7 @@ public class ManagerDishController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @CacheEvict(allEntries = true)
     public ResponseEntity<Dish> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody DishTo dishTo) {
         int userId = authUser.id();
         log.info("create {} for user {}", dishTo, userId);

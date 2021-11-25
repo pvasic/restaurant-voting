@@ -3,7 +3,6 @@ package ru.pvasic.restaurantvoting.to;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;
-import ru.pvasic.restaurantvoting.model.BaseEntity;
 
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;

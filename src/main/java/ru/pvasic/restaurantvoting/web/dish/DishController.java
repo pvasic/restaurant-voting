@@ -2,6 +2,8 @@ package ru.pvasic.restaurantvoting.web.dish;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,18 +20,21 @@ import java.util.List;
 @RequestMapping(value = DishController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
+@CacheConfig(cacheNames = "dishes")
 public class DishController {
     static final String URL = "/api/user/dishes";
 
     private final DishRepository dishRepository;
 
     @GetMapping("/{id}")
+    @Cacheable
     public ResponseEntity<Dish> get(@PathVariable int id) {
         log.info("get dish {}", id);
         return ResponseEntity.of(dishRepository.findById(id));
     }
 
     @GetMapping
+    @Cacheable
     public List<Dish> getAll(@RequestParam int restaurantId) {
         log.info("getAll dishes for restaurant {}", restaurantId);
         return dishRepository.getAll(restaurantId);
