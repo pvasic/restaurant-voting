@@ -10,7 +10,7 @@ import java.time.LocalTime;
 public class VoteUtil {
     public static final LocalTime LIMIT_VOTE_TIME = LocalTime.of(11, 00);
 
-    public static Vote voteFromTo(VoteTo voteTo, int userId) {
+    public static Vote fromTo(VoteTo voteTo, int userId) {
         return new Vote(voteTo.getId(), userId, voteTo.getRestaurantId());
     }
 }

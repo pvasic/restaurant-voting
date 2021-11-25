@@ -10,7 +10,7 @@ import ru.pvasic.restaurantvoting.to.VoteTo;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static ru.pvasic.restaurantvoting.util.VoteUtil.voteFromTo;
+import static ru.pvasic.restaurantvoting.util.VoteUtil.fromTo;
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkVoteDateTime;
 
 @Service
@@ -21,7 +21,7 @@ public class VoteService {
     @Transactional
     public Vote update(VoteTo voteTo, LocalDate oldDate, int userId) {
         checkVoteDateTime(voteTo.getId(), oldDate);
-        return repository.save(voteFromTo(voteTo, userId));
+        return repository.save(fromTo(voteTo, userId));
     }
 
     @Transactional
@@ -32,7 +32,7 @@ public class VoteService {
             checkVoteDateTime(oldVote.getId(), oldVote.getDateTime().toLocalDate());
             repository.delete(oldVote.id());
         }
-        return repository.save(voteFromTo(voteTo, userId));
+        return repository.save(fromTo(voteTo, userId));
     }
 
     @Transactional

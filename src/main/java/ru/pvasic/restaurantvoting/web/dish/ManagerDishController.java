@@ -27,8 +27,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
-import static ru.pvasic.restaurantvoting.util.DishUtil.newFromTo;
-import static ru.pvasic.restaurantvoting.util.DishUtil.updateFromTo;
+import static ru.pvasic.restaurantvoting.util.DishUtil.fromTo;
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew;
 
@@ -60,7 +59,7 @@ public class ManagerDishController {
         repository.checkBelong(id, userId);
 
         // TODO add check unique date-name
-        repository.save(updateFromTo(dishTo, id, userId));
+        repository.save(fromTo(dishTo, userId));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -71,7 +70,7 @@ public class ManagerDishController {
         restaurantRepository.checkBelong(dishTo.getRestaurantId(), userId);
 
         // TODO add check unique date-name
-        Dish created = repository.save(newFromTo(dishTo, userId));
+        Dish created = repository.save(fromTo(dishTo, userId));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/user/dishes/{id}")
                 .buildAndExpand(created.getId()).toUri();

@@ -11,15 +11,7 @@ import java.time.LocalTime;
 @UtilityClass
 public class DishUtil {
 
-    public static Dish dishFromTo(DishTo dishTo, int userId) {
+    public static Dish fromTo(DishTo dishTo, int userId) {
         return new Dish(dishTo.getId(), dishTo.getName(), dishTo.getPrice(), dishTo.getRestaurantId(), userId);
-    }
-
-    public static Dish updateFromTo(DishTo dishTo, int id, int userId) {
-        return new Dish(id, dishTo.getName(), dishTo.getPrice(), dishTo.getRestaurantId(), userId);
-    }
-
-    public static Dish newFromTo(DishTo dishTo, int userId) {
-        return new Dish(null, dishTo.getName(), dishTo.getPrice(), dishTo.getRestaurantId(), userId);
     }
 }

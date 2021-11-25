@@ -42,7 +42,7 @@ class ManagerDishControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = MANAGER_MAIL)
     void update() throws Exception {
         DishTo dishTo = DishTestData.getUpdated();
-        Dish updated = updateFromTo(dishTo, DISH1_ID, MANAGER_ID);
+        Dish updated = fromTo(dishTo, MANAGER_ID);
         callPerformPut(updated);
         MATCHER.assertMatch(repository.getById(DISH1_ID), updated);
     }
@@ -51,7 +51,7 @@ class ManagerDishControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = MANAGER_MAIL)
     void createWithLocation() throws Exception {
         DishTo dishTo = DishTestData.getNew();
-        Dish newDish = newFromTo(dishTo, MANAGER_ID);
+        Dish newDish = fromTo(dishTo, MANAGER_ID);
         ResultActions action = callPerformPost(newDish);
 
         Dish created = DishTestData.MATCHER.readFromJson(action);
