@@ -27,7 +27,6 @@ public class DishController {
     private final DishRepository dishRepository;
 
     @GetMapping("/{id}")
-    @Cacheable
     public ResponseEntity<Dish> get(@PathVariable int id) {
         log.info("get dish {}", id);
         return ResponseEntity.of(dishRepository.findById(id));
