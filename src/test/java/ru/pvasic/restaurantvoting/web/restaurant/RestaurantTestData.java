@@ -2,6 +2,7 @@ package ru.pvasic.restaurantvoting.web.restaurant;
 
 import ru.pvasic.restaurantvoting.MatcherFactory;
 import ru.pvasic.restaurantvoting.model.Restaurant;
+import ru.pvasic.restaurantvoting.to.RestaurantTo;
 
 import java.util.List;
 
@@ -10,7 +11,6 @@ import static ru.pvasic.restaurantvoting.web.dish.DishTestData.dishes1;
 import static ru.pvasic.restaurantvoting.web.dish.DishTestData.dishes2;
 import static ru.pvasic.restaurantvoting.web.user.UserTestData.ADMIN_ID;
 import static ru.pvasic.restaurantvoting.web.user.UserTestData.MANAGER_ID;
-import static ru.pvasic.restaurantvoting.web.user.UserTestData.USER_ID;
 
 public class RestaurantTestData {
     public static final MatcherFactory.Matcher<Restaurant> MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "created", "dishes");
@@ -37,13 +37,13 @@ public class RestaurantTestData {
 
     public static final List<Restaurant> RESTAURANTS = List.of(restaurant_2, restaurant_1);
 
-    public static Restaurant getUpdated() {
-        return new Restaurant(RESTAURANT1_ID, USER_ID, "Обновленное Название", "Обновленный адрес", "updated@mac.com");
+    public static RestaurantTo getUpdated() {
+        return new RestaurantTo(RESTAURANT1_ID, "Обновленное Название", "Обновленный адрес", "updated@mac.com");
 
     }
 
-    public static Restaurant getNew() {
-        return new Restaurant(null, ADMIN_ID, "Новое Название", "Новый адрес", "new@mac.com");
+    public static RestaurantTo getNew() {
+        return new RestaurantTo(null, "Новое Название", "Новый адрес", "new@mac.com");
     }
 
 

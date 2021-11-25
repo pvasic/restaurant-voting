@@ -18,7 +18,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.pvasic.restaurantvoting.AuthUser;
 import ru.pvasic.restaurantvoting.model.Restaurant;
 import ru.pvasic.restaurantvoting.repository.restaurant.RestaurantRepository;
-import ru.pvasic.restaurantvoting.service.restaurant.RestaurantService;
+import ru.pvasic.restaurantvoting.to.RestaurantTo;
+import ru.pvasic.restaurantvoting.util.RestaurantUtil;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -35,7 +36,6 @@ public class ManagerRestaurantController {
     static final String URL = "/api/manager/restaurants";
 
     private final RestaurantRepository repository;
-    private final RestaurantService service;
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -48,20 +48,22 @@ public class ManagerRestaurantController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
+    public void update(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody RestaurantTo restaurantTo, @PathVariable int id) {
         int userId = authUser.id();
-        log.info("update {} restaurant {}", restaurant, userId);
-        assureIdConsistent(restaurant, id);
+        log.info("update {} restaurant {}", restaurantTo, userId);
+        assureIdConsistent(restaurantTo, id);
         repository.checkBelong(id, userId);
-        repository.save(restaurant);
+        repository.save(RestaurantUtil.fromTo(restaurantTo, userId));
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Restaurant> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody Restaurant restaurant) {
+    public ResponseEntity<Restaurant> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody RestaurantTo rTo) {
         int userId = authUser.id();
-        log.info("create {} for user {}", restaurant, userId);
-        checkNew(restaurant);
-        Restaurant created = service.save(restaurant, userId);
+        log.info("create {} for user {}", rTo, userId);
+        checkNew(rTo);
+        Restaurant restaurant = RestaurantUtil.fromTo(rTo, userId);
+        restaurant.setUserId(userId);
+        Restaurant created = repository.save(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(RestaurantController.URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
