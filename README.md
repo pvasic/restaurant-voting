@@ -13,9 +13,5 @@ For further reference, please consider the following sections:
 * If user votes again the same day:
   - If it is before 11:00 we assume that he changed his mind.
   - If it is after 11:00 then it is too late, vote can't be changed
-
-####2.6: На управление (CRUD) ресторанами и едой должны быть ОТДЕЛЬНЫЕ контроллеры. Не надо все, что может админ, сваливать в одну кучу!
-
-####2.7: Проверьте в Swagger, что в POST и PUT нет ничего лишнего, а в GET есть все необходимые данные. Например, при запросе голоса должен быть id ресторана, а при создании-редактировании ресторана не должно быть меню и еды.
-
-####5.3: Не смешивайте TO и Entity вместе. Они должны быть независимыми друг от друга. На TopJava мы смотрели разные варианты c использованием TO и без. Делаем максимально просто.
+  
+<a href="https://http://localhost:8080/swagger-ui">Swagger UI</a>
