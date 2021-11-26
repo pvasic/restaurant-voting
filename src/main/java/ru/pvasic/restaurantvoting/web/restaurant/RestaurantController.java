@@ -2,6 +2,8 @@ package ru.pvasic.restaurantvoting.web.restaurant;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import java.util.List;
 @RequestMapping(value = RestaurantController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
+@CacheConfig(cacheNames = "restaurants")
 public class RestaurantController {
 
     static final String URL = "/api/user/restaurants";
@@ -33,6 +36,7 @@ public class RestaurantController {
     }
 
     @GetMapping
+    @Cacheable
     public List<Restaurant> getAll(@AuthenticationPrincipal AuthUser authUser) {
         log.info("getAll restaurants for user {}", authUser.id());
         return repository.findAll(Sort.by(Sort.Direction.ASC, "name", "email"));

@@ -2,6 +2,8 @@ package ru.pvasic.restaurantvoting.web.restaurant;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,7 @@ import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew
 @RequestMapping(value = ManagerRestaurantController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
+@CacheConfig(cacheNames = "restaurants")
 public class ManagerRestaurantController {
 
     static final String URL = "/api/manager/restaurants";
@@ -48,6 +51,7 @@ public class ManagerRestaurantController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(allEntries = true)
     public void update(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody RestaurantTo restaurantTo, @PathVariable int id) {
         int userId = authUser.id();
         log.info("update {} restaurant {}", restaurantTo, userId);
@@ -57,6 +61,7 @@ public class ManagerRestaurantController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @CacheEvict(allEntries = true)
     public ResponseEntity<Restaurant> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody RestaurantTo rTo) {
         int userId = authUser.id();
         log.info("create {} for user {}", rTo, userId);

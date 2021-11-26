@@ -2,6 +2,9 @@ package ru.pvasic.restaurantvoting.web.vote;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +37,7 @@ import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew
 @RequestMapping(value = VoteController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @AllArgsConstructor
+@CacheConfig(cacheNames = "votes")
 public class VoteController {
     static final String URL = "/api/user/votes";
 
@@ -42,6 +46,7 @@ public class VoteController {
     private final RestaurantRepository restaurantRepository;
 
     @GetMapping("/{id}")
+    @Cacheable
     public ResponseEntity<Vote> get(@AuthenticationPrincipal AuthUser authUser, @PathVariable int id) {
         log.info("get vote {} for user {}", id, authUser.id());
         return ResponseEntity.of(repository.get(id, authUser.id()));
@@ -59,6 +64,7 @@ public class VoteController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @CacheEvict(allEntries = true)
     public void update(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody VoteTo voteTo, @PathVariable int id) {
         int userId = authUser.id();
         log.info("update vote {} for user {}", id, userId);
@@ -68,6 +74,7 @@ public class VoteController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @CacheEvict(allEntries = true)
     public ResponseEntity<Vote> createWithLocation(@AuthenticationPrincipal AuthUser authUser, @Valid @RequestBody VoteTo voteTo) {
         int userId = authUser.id();
         log.info("create voteTo {} for user {}", voteTo, userId);
