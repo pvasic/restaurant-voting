@@ -8,6 +8,9 @@ import ru.pvasic.restaurantvoting.model.Role;
 import ru.pvasic.restaurantvoting.model.User;
 import ru.pvasic.restaurantvoting.to.UserTo;
 
+import java.util.Optional;
+import java.util.Set;
+
 @UtilityClass
 public class UserUtil {
 
@@ -30,5 +33,15 @@ public class UserUtil {
         user.setPassword(StringUtils.hasText(password) ? PASSWORD_ENCODER.encode(password) : password);
         user.setEmail(user.getEmail().toLowerCase());
         return user;
+    }
+
+    public static Optional<User> updateRole(User oldUser) {
+        Set<Role> roles = oldUser.getRoles();
+        if (!roles.contains(Role.MANAGER)) {
+            roles.add(Role.MANAGER);
+            oldUser.setRoles(roles);
+            return Optional.of(oldUser);
+        }
+        return Optional.empty();
     }
 }
