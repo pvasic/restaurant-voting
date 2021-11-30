@@ -2,7 +2,7 @@
 
 ## Voting system for deciding where to have lunch
 
-* 3 types of users: admin, managers and regular users
+* 3 types of users: admin, manager and regular user
 * Admin can edit users.
 * Manager can input a restaurant and it's lunch menu of the day
 * Menu changes each day (managers do the updates)
@@ -12,7 +12,7 @@
   - If it is before 11:00 we assume that he changed his mind.
   - If it is after 11:00 then it is too late, vote can't be changed
 
-###Swagger UI
+### Swagger UI
 
 <a href="http://localhost:8080/swagger-ui.html">You can watch it here: localhost:8080/swagger-ui</a>
 
