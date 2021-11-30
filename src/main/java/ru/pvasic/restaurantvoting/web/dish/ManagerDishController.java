@@ -61,6 +61,7 @@ public class ManagerDishController {
         log.info("update {} for user {}", dishTo, userId);
         assureIdConsistent(dishTo, id);
         repository.checkBelong(id, userId);
+        restaurantRepository.checkBelong(dishTo.getRestaurantId(), userId);
 
         // TODO add check unique date-name
         repository.save(fromTo(dishTo, userId));

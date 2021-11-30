@@ -12,12 +12,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity(name = "Dish")
-@Table(name = "dishes", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "date"}, name = "dishes_unique_name_date_idx")})
+@Table(name = "dishes")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

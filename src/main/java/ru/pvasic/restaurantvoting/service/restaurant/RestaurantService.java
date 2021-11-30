@@ -7,7 +7,6 @@ import ru.pvasic.restaurantvoting.model.Restaurant;
 import ru.pvasic.restaurantvoting.model.User;
 import ru.pvasic.restaurantvoting.repository.UserRepository;
 import ru.pvasic.restaurantvoting.repository.restaurant.RestaurantRepository;
-import ru.pvasic.restaurantvoting.util.UserUtil;
 
 import java.util.Optional;
 
@@ -23,7 +22,7 @@ public class RestaurantService {
     public Restaurant save(Restaurant restaurant, int userId) {
         User oldUser = userRepository.checkByUserId(userId);
         Optional<User> updated = updateRole(oldUser);
-        updated.ifPresent(user -> userRepository.save(UserUtil.prepareToSave(user)));
+        updated.ifPresent(userRepository::save);
         return repository.save(restaurant);
     }
 }

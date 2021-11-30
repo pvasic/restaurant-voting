@@ -29,8 +29,7 @@ public class UserUtil {
     }
 
     public static User prepareToSave(User user) {
-        String password = user.getPassword();
-        user.setPassword(StringUtils.hasText(password) ? PASSWORD_ENCODER.encode(password) : password);
+        user.setPassword(PASSWORD_ENCODER.encode(user.getPassword()));
         user.setEmail(user.getEmail().toLowerCase());
         return user;
     }
