@@ -23,6 +23,7 @@ public class DishTestData {
     public static final Dish DISH_2 = new Dish(DISH2_ID, "rise", 300, LocalDate.of(2021, Month.MAY, 6), 1, MANAGER_ID);
     public static final Dish DISH_3 = new Dish(DISH3_ID, "Картошка", 100, LocalDate.of(2021, Month.MAY, 8), 2, ADMIN_ID);
     public static final Dish DISH_4 = new Dish(DISH4_ID, "Рис", 200, LocalDate.of(2021, Month.MAY, 8), 2, ADMIN_ID);
+    //TODO dish today
 
     public static final List<Dish> dishes1 = List.of(DISH_1, DISH_2);
     public static final List<Dish> dishes2 = List.of(DISH_3, DISH_4);
