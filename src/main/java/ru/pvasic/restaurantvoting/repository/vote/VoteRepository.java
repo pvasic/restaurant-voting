@@ -9,7 +9,7 @@ import ru.pvasic.restaurantvoting.repository.BaseRepository;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
-public interface VoteRepository extends BaseRepository<Vote>, CustomVoteRepository {
+public interface VoteRepository extends BaseRepository<Vote> {
 
     @Query("SELECT v FROM Vote v WHERE v.id = :id and v.userId = :userId")
     Optional<Vote> get(int id, int userId);

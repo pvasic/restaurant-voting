@@ -40,31 +40,31 @@ Credential
     curl -s http://localhost:8080/api/profile --user test@mail.ru:test-password
 
 #### get All Restaurants
-    curl -s http://localhost:8080/api/user/restaurants --user user@gmail.com:user
+    curl -s http://localhost:8080/api/restaurants --user user@gmail.com:user
 
 #### get Restaurant with dishes
-    curl -s http://localhost:8080/api/user/restaurants/2/with-dishes --user user@gmail.com:user
+    curl -s http://localhost:8080/api/restaurants/2/with-dishes --user user@gmail.com:user
 
 #### post Restaurant
-    curl -s -i -X POST -d '{"name": "newRestaurant","address": "newTown","email": "new@mac.com"}}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8080/api/user/restaurants --user user@gmail.com:user
+    curl -s -i -X POST -d '{"name": "newRestaurant","address": "newTown","email": "new@mac.com"}}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8080/api/restaurants --user user@gmail.com:user
 
 #### get All Dishes for restaurant 2
-    curl -s http://localhost:8080/api/user/dishes/2 --user user@gmail.com:user
+    curl -s http://localhost:8080/api/dishes/2 --user user@gmail.com:user
 
 #### put Dish 2 for restaurant 1
-    curl -s -X PUT -d '{"id": 2,"name": "UpdateDish","price": 800,"restaurantId": 1}' -H 'Content-Type: application/json' http://localhost:8080/api/manager/dishes/2 --user manager@gmail.com:manager
+    curl -s -X PUT -d '{"id": 2,"name": "UpdateDish","price": 800,"restaurantId": 1}' -H 'Content-Type: application/json' http://localhost:8080/api/dishes/2 --user manager@gmail.com:manager
 
 #### get Vote 1
-    curl -s http://localhost:8080/api/user/votes/1 --user user@gmail.com:user
+    curl -s http://localhost:8080/api/votes/1 --user user@gmail.com:user
 
 #### post Vote
-    curl -s -i -X POST -d '{"restaurantId": 2}}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8080/api/user/votes --user user@gmail.com:user
+    curl -s -i -X POST -d '{"restaurantId": 2}}' -H 'Content-Type:application/json;charset=UTF-8' http://localhost:8080/api/votes --user user@gmail.com:user
 
 
 
 #### validate with Error
     curl -s -X POST -d '{}' -H 'Content-Type: application/json' http://localhost:8080/api/admin/users --user admin@gmail.com:admin
 
-    curl -s -X PUT -d '{"address":"Москва"}' -H 'Content-Type: application/json' http://localhost:8080/api/manager/restaurants --user manager@gmail.com:manager
+    curl -s -X PUT -d '{"address":"Москва"}' -H 'Content-Type: application/json' http://localhost:8080/api/restaurants --user manager@gmail.com:manager
 
-    curl -s -X PUT -d '{"id": 2,"name": "UpdateDish","price": 800,"restaurantId": 2}' -H 'Content-Type: application/json' http://localhost:8080/api/manager/dishes/2 --user manager@gmail.com:manager
+    curl -s -X PUT -d '{"id": 2,"name": "UpdateDish","price": 800,"restaurantId": 2}' -H 'Content-Type: application/json' http://localhost:8080/api/dishes/2 --user manager@gmail.com:manager

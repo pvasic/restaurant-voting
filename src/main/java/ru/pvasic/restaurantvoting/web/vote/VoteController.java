@@ -39,7 +39,7 @@ import static ru.pvasic.restaurantvoting.util.validation.ValidationUtil.checkNew
 @AllArgsConstructor
 @CacheConfig(cacheNames = "votes")
 public class VoteController {
-    static final String URL = "/api/user/votes";
+    static final String URL = "/api/votes";
 
     private final VoteRepository repository;
     private final VoteService service;
