@@ -50,7 +50,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/api/admin/**").hasRole(Role.ADMIN.name())
-                .antMatchers("/api/manager/**").hasRole(Role.MANAGER.name())
+                .antMatchers(HttpMethod.POST,"/api/restaurants/**").hasAnyRole(Role.USER.name(), Role.MANAGER.name(), Role.ADMIN.name())
+                .antMatchers(HttpMethod.GET,"/api/restaurants/**").hasAnyRole(Role.USER.name(), Role.MANAGER.name(), Role.ADMIN.name())
+                .antMatchers("/api/restaurants/**").hasRole(Role.MANAGER.name())
                 .antMatchers(HttpMethod.POST, "/api/profile").anonymous()
                 .antMatchers("/api/**").authenticated()
                 .and().httpBasic()
